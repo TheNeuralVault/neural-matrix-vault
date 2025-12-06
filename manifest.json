@@ -1,0 +1,21 @@
+{
+  "name": "Neural Matrix Vault",
+  "short_name": "NeuralVault",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#050505",
+  "description": "The Apex of Digital Architecture.",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2040/2040504.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2040/2040504.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
