@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Neural Matrix Vault | The Armory</title>
+    <title>Neural Matrix Vault | Advanced Digital Architecture</title>
     
-    <!-- SEO & META -->
-    <meta name="description" content="Neural Matrix Vault: Access High-Fidelity WebGL Tools and SEO Protocols.">
+    <!-- PWA & META -->
+    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#050505">
+    <meta name="description" content="Neural Matrix Vault: Enterprise-grade WebGL development and SEO consulting.">
+    <meta property="og:url" content="https://theneuralvault.github.io/neural-matrix-vault/">
 
     <!-- GOOGLE ANALYTICS -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-P1PCVNCCE4"></script>
@@ -18,119 +20,10 @@
       gtag('config', 'G-P1PCVNCCE4');
     </script>
 
-    <!-- TITANIUM STYLES -->
-    <style>
-        :root { 
-            --void: #050505; 
-            --neon: #00f3ff; 
-            --neon-gold: #ffd700;
-            --glass: rgba(5, 15, 20, 0.85); 
-            --glass-border: rgba(0, 243, 255, 0.3); 
-        }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { background: var(--void); color: #fff; font-family: 'Courier New', monospace; overflow: hidden; height: 100vh; }
-        
-        #neural-canvas { position: absolute; top:0; left:0; width:100%; height:100%; z-index:1; }
-        
-        /* --- LAYERS --- */
-        .layer { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            z-index: 10; display: flex; flex-direction: column; 
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
+    <!-- STYLES -->
+    <link rel="stylesheet" href="style.css">
 
-        /* --- LANDING --- */
-        #landing-layer { justify-content: center; align-items: center; text-align: center; }
-        .hero-text { font-size: 2.2rem; margin-bottom: 30px; text-shadow: 0 0 20px rgba(0,243,255,0.4); line-height: 1.2; }
-        .highlight { color: var(--neon); font-weight: bold; text-shadow: 0 0 15px var(--neon); }
-        
-        .cyber-button { 
-            background: rgba(0, 243, 255, 0.05); border: 1px solid var(--neon); color: var(--neon); 
-            padding: 15px 40px; font-size: 1rem; letter-spacing: 2px; cursor: pointer; 
-            font-weight: bold; text-transform: uppercase; transition: 0.3s;
-            box-shadow: 0 0 15px rgba(0,243,255,0.1);
-        }
-        .cyber-button:active { background: var(--neon); color: #000; box-shadow: 0 0 40px var(--neon); }
-
-        /* --- DASHBOARD --- */
-        #dashboard-layer { 
-            display: none; opacity: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
-            padding: 20px; overflow-y: auto;
-        }
-        .dash-header { 
-            border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; margin-bottom: 20px; 
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        
-        .grid-container { 
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; 
-            padding-bottom: 80px; max-width: 1200px; margin: 0 auto;
-        }
-        
-        .card { 
-            background: var(--glass); border: 1px solid var(--glass-border); padding: 25px; 
-            border-radius: 4px; transition: 0.3s; cursor: pointer; position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; flex-direction: column;
-        }
-        .card:hover { border-color: var(--neon); transform: translateY(-5px); box-shadow: 0 0 20px rgba(0,243,255,0.2); }
-        
-        .card-tag {
-            font-size: 0.7rem; color: var(--neon); border: 1px solid var(--neon); 
-            padding: 2px 8px; align-self: flex-start; margin-bottom: 10px; text-transform: uppercase;
-        }
-        .card h3 { color: #fff; margin-bottom: 10px; font-size: 1.2rem; text-shadow: 0 0 5px var(--neon); }
-        .card p { color: #bbb; font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px; flex-grow: 1; }
-        .card-price { font-size: 1.1rem; color: var(--neon-gold); font-weight: bold; margin-top: auto; }
-
-        /* --- MODAL (CHECKOUT) --- */
-        #modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 100;
-            display: none; justify-content: center; align-items: center;
-            opacity: 0; transition: opacity 0.3s;
-        }
-        .modal-content {
-            background: #0a0a0a; border: 1px solid var(--neon);
-            width: 90%; max-width: 500px; padding: 30px;
-            position: relative; transform: scale(0.9); transition: transform 0.3s;
-            box-shadow: 0 0 50px rgba(0,243,255,0.15);
-        }
-        .modal-close {
-            position: absolute; top: 15px; right: 20px;
-            font-size: 1.5rem; color: #555; cursor: pointer;
-        }
-        .modal-close:hover { color: var(--neon); }
-        
-        #modal-tag { color: var(--neon); font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; display: block; margin-bottom: 10px;}
-        #modal-title { color: #fff; font-size: 1.8rem; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px;}
-        #modal-desc { color: #ccc; line-height: 1.6; margin-bottom: 20px; font-size: 0.95rem; }
-        
-        .feature-list { list-style: none; margin-bottom: 25px; }
-        .feature-list li { margin-bottom: 8px; color: #aaa; font-size: 0.9rem; display: flex; align-items: center; }
-        .feature-list li::before { content: "►"; color: var(--neon); margin-right: 10px; font-size: 0.7rem; }
-        
-        #modal-price { display: block; font-size: 1.5rem; color: var(--neon-gold); margin-bottom: 20px; text-align: center; }
-
-        .modal-action {
-            display: block; width: 100%; text-align: center;
-            background: var(--neon); color: #000; padding: 15px;
-            font-weight: bold; text-decoration: none; text-transform: uppercase;
-            transition: 0.3s; letter-spacing: 1px;
-        }
-        .modal-action:hover { background: #fff; box-shadow: 0 0 30px var(--neon); }
-
-        /* LOADER */
-        #loader { 
-            position:absolute; z-index:99; width:100%; height:100%; 
-            background:#000; display:flex; flex-direction: column;
-            justify-content:center; align-items:center; transition:opacity 0.8s; 
-        }
-        .loader-bar { width:150px; height:2px; background:var(--neon); animation:load 1.5s infinite; }
-        @keyframes load { 0%{transform:scaleX(0);} 50%{transform:scaleX(1);} 100%{transform:scaleX(0);} }
-
-    </style>
-
-    <!-- THREE.JS IMPORTS -->
+    <!-- IMPORT MAP -->
     <script type="importmap">
         { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }
     </script>
@@ -141,269 +34,52 @@
         <div id="loader"><div class="loader-bar"></div></div>
 
         <!-- LANDING -->
-        <div id="landing-layer" class="layer">
+        <div id="landing-layer" class="layer active-layer">
             <div style="z-index: 2;">
-                <h2 class="hero-text">NEURAL MATRIX<br><span class="highlight">ARMORY</span></h2>
-                <button id="init-btn" class="cyber-button">ACCESS VAULT</button>
+                <h2 class="hero-text">NEURAL MATRIX<br><span style="color:var(--neon)">VAULT</span></h2>
+                <button id="init-btn" class="cyber-button">ENTER SYSTEM</button>
             </div>
         </div>
 
-        <!-- DASHBOARD / PRODUCT GRID -->
+        <!-- DASHBOARD -->
         <div id="dashboard-layer" class="layer">
-            <header class="dash-header">
-                <h1 style="font-size: 1.2rem; color: var(--neon);">:: CLASSIFIED ARTIFACTS ::</h1>
-                <div style="font-size: 0.8rem; color: #888;">CREDITS: <span style="color:var(--neon-gold)">∞</span></div>
-            </header>
-
+            <h2 style="text-align:center; color:var(--neon); margin-top:20px;">:: AVAILABLE PROTOCOLS ::</h2>
             <div class="grid-container">
-                <!-- PRODUCT 1 -->
-                <article class="card" onclick="openModal('KIT')">
-                    <span class="card-tag">CODEBASE</span>
+                <article class="card" onclick="window.open('https://buy.stripe.com/cNiaEX0KQ2Amcyz1aP8g008')">
                     <h3>TITANIUM PROTOCOL</h3>
-                    <p>The exact source code of this website. Pure WebGL + HTML5. No frameworks.</p>
+                    <p>Proprietary Source Code. High-performance WebGL Engine license.</p>
                     <div class="card-price">$497.00</div>
                 </article>
-
-                <!-- PRODUCT 2 -->
-                <article class="card" onclick="openModal('SEO')">
-                    <span class="card-tag">SERVICE</span>
-                    <h3>SEO DOMINANCE</h3>
-                    <p>We inject JSON-LD schemas and optimize metadata to force #1 ranking on Google.</p>
+                <article class="card" onclick="window.open('https://buy.stripe.com/14A9AT2SYgrcaqr06L8g009')">
+                    <h3>SEO ARCHITECTURE</h3>
+                    <p>Advanced JSON-LD & Metadata Optimization.</p>
                     <div class="card-price">$2,500.00</div>
                 </article>
-
-                <!-- PRODUCT 3 -->
-                <article class="card" onclick="openModal('CONSULT')">
-                    <span class="card-tag">HIGH-TICKET</span>
+                <article class="card" onclick="window.open('https://buy.stripe.com/3cI6oH1OUcaWcyz2eT8g00a')">
                     <h3>APEX STRATEGY</h3>
-                    <p>1-on-1 Architecture consultation. We map your digital empire from zero to infinity.</p>
+                    <p>Executive Digital Consulting.</p>
                     <div class="card-price">$5,000.00</div>
                 </article>
-                
-                <!-- PRODUCT 4 -->
-                <article class="card" onclick="openModal('NETWORK')">
-                    <span class="card-tag">COMMUNITY</span>
-                    <h3>THE INNER CIRCLE</h3>
-                    <p>Access to the private Discord. Daily algorithms, assets, and elite networking.</p>
+                <article class="card" onclick="window.open('https://buy.stripe.com/6oU3cv5165My7ef6v98g00b')">
+                    <h3>INNER CIRCLE</h3>
+                    <p>Private Developer Network.</p>
                     <div class="card-price">$97/mo</div>
                 </article>
             </div>
-        </div>
 
-        <!-- MODAL (PRODUCT DETAILS) -->
-        <div id="modal-overlay">
-            <div class="modal-content">
-                <div class="modal-close" onclick="closeModal()">×</div>
-                <span id="modal-tag">CATEGORY</span>
-                <h2 id="modal-title">PRODUCT NAME</h2>
-                <p id="modal-desc">Description.</p>
-                <ul id="modal-features" class="feature-list">
-                    <!-- Javascript populates this -->
-                </ul>
-                <span id="modal-price">$0.00</span>
-                <a href="#" id="modal-link" class="modal-action">ACQUIRE ASSET</a>
+            <div class="legal-footer">
+                <p>&copy; 2025 NEURAL MATRIX VAULT. ALL RIGHTS RESERVED.</p>
+                <br>
+                <a href="legal.html">LEGAL WARNING</a> | 
+                <a href="mailto:theneuralvaultai@gmail.com">SUPPORT</a>
             </div>
+            
+            <!-- Hidden Admin Link (Bottom Right Corner) -->
+            <div style="position:fixed; bottom:0; right:0; width:30px; height:30px; cursor:pointer;" onclick="location.href='console_x1.html'"></div>
         </div>
     </div>
 
-    <!-- LOGIC CORE -->
-    <script type="module">
-        import * as THREE from 'three';
-        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
-
-        /* --- THE ARMORY DATA --- */
-        const PRODUCTS = {
-            'KIT': {
-                tag: 'SOURCE CODE',
-                title: 'TITANIUM PROTOCOL',
-                desc: 'Download the master-key to the web. This boilerplate allows you to deploy cinematic 3D websites in minutes without heavy frameworks.',
-                features: [
-                    'Full Source Code (HTML/CSS/JS)',
-                    'Three.js Rendering Engine',
-                    'Mobile Optimized Swarm Logic',
-                    'Commercial Usage Rights'
-                ],
-                price: '$497.00',
-                link: 'mailto:buy@neuralmatrixvault.com?subject=Purchase%20Titanium%20Protocol'
-            },
-            'SEO': {
-                tag: 'ENTERPRISE SERVICE',
-                title: 'SEO DOMINANCE',
-                desc: 'Stop guessing. We mechanically force search engines to index your site as an authority using advanced Schema injections.',
-                features: [
-                    'Full Site Audit',
-                    'JSON-LD Structured Data Implementation',
-                    'Google Knowledge Graph Setup',
-                    'Rank #1 Guarantee'
-                ],
-                price: '$2,500.00',
-                link: 'mailto:buy@neuralmatrixvault.com?subject=Inquire%20SEO%20Protocol'
-            },
-            'CONSULT': {
-                tag: '1-ON-1 ARCHITECTURE',
-                title: 'APEX STRATEGY',
-                desc: 'Direct access to Magnus Opus. We will deconstruct your business model and rebuild it using automation and AI.',
-                features: [
-                    '3-Hour Strategy Session',
-                    'Custom Blueprint PDF',
-                    'Tech Stack Selection',
-                    '30 Days Support'
-                ],
-                price: '$5,000.00',
-                link: 'mailto:buy@neuralmatrixvault.com?subject=Book%20Apex%20Strategy'
-            },
-            'NETWORK': {
-                tag: 'SUBSCRIPTION',
-                title: 'THE INNER CIRCLE',
-                desc: 'You are the average of the 5 people you spend time with. Upgrade your circle. Join the elite developers and founders.',
-                features: [
-                    'Private Discord Access',
-                    'Weekly Asset Drops',
-                    'Live Code Reviews',
-                    'Collaboration Opportunities'
-                ],
-                price: '$97.00 / Month',
-                link: 'mailto:buy@neuralmatrixvault.com?subject=Join%20Inner%20Circle'
-            }
-        };
-
-        /* --- UI LOGIC --- */
-        window.openModal = function(key) {
-            const item = PRODUCTS[key];
-            document.getElementById('modal-tag').innerText = item.tag;
-            document.getElementById('modal-title').innerText = item.title;
-            document.getElementById('modal-desc').innerText = item.desc;
-            document.getElementById('modal-price').innerText = item.price;
-            document.getElementById('modal-link').href = item.link;
-
-            // Populate Features
-            const list = document.getElementById('modal-features');
-            list.innerHTML = ''; // Clear old
-            item.features.forEach(feat => {
-                const li = document.createElement('li');
-                li.innerText = feat;
-                list.appendChild(li);
-            });
-            
-            const overlay = document.getElementById('modal-overlay');
-            overlay.style.display = 'flex';
-            setTimeout(() => {
-                overlay.style.opacity = '1';
-                overlay.querySelector('.modal-content').style.transform = 'scale(1)';
-            }, 10);
-        };
-
-        window.closeModal = function() {
-            const overlay = document.getElementById('modal-overlay');
-            overlay.style.opacity = '0';
-            overlay.querySelector('.modal-content').style.transform = 'scale(0.9)';
-            setTimeout(() => {
-                overlay.style.display = 'none';
-            }, 300);
-        };
-
-        /* --- 3D ENGINE --- */
-        class World {
-            constructor(canvas) {
-                this.canvas = canvas;
-                this.width = window.innerWidth;
-                this.height = window.innerHeight;
-                this.renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: "high-performance" });
-                this.renderer.setSize(this.width, this.height);
-                this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-                this.scene = new THREE.Scene();
-                this.scene.background = new THREE.Color(0x050505);
-                this.camera = new THREE.PerspectiveCamera(60, this.width / this.height, 0.1, 1000);
-                this.camera.position.set(0, 0, 15);
-                
-                this.scene.add(new THREE.AmbientLight(0x404040, 2));
-                const pLight = new THREE.PointLight(0x00f3ff, 3, 50);
-                pLight.position.set(5, 5, 5);
-                this.scene.add(pLight);
-                
-                this.initSwarm();
-                
-                this.composer = new EffectComposer(this.renderer);
-                this.composer.addPass(new RenderPass(this.scene, this.camera));
-                this.composer.addPass(new UnrealBloomPass(new THREE.Vector2(this.width, this.height), 1.5, 0.4, 0.85));
-                
-                window.addEventListener('resize', () => this.resize());
-                this.renderer.setAnimationLoop(() => this.animate());
-            }
-
-            initSwarm() {
-                const geo = new THREE.OctahedronGeometry(0.12, 0);
-                const mat = new THREE.MeshStandardMaterial({ 
-                    color: 0x111111, roughness: 0.3, metalness: 0.9, 
-                    emissive: 0x00f3ff, emissiveIntensity: 0.4 
-                });
-                this.swarm = new THREE.InstancedMesh(geo, mat, 1200);
-                const dummy = new THREE.Object3D();
-                for(let i=0; i<1200; i++) {
-                    const r = 8 + Math.random() * 6;
-                    const theta = Math.random() * Math.PI * 2;
-                    const phi = Math.acos(2 * Math.random() - 1);
-                    dummy.position.set(r*Math.sin(phi)*Math.cos(theta), r*Math.sin(phi)*Math.sin(theta), r*Math.cos(phi));
-                    dummy.lookAt(0,0,0);
-                    dummy.scale.setScalar(Math.random()+0.5);
-                    dummy.updateMatrix();
-                    this.swarm.setMatrixAt(i, dummy.matrix);
-                }
-                this.scene.add(this.swarm);
-            }
-
-            enterVault() {
-                let speed = 0.2;
-                const tl = setInterval(() => {
-                    this.camera.position.z -= speed;
-                    speed *= 1.1;
-                    this.scene.rotation.z += 0.05;
-                    if(this.camera.position.z < -2) {
-                        clearInterval(tl);
-                        const landing = document.getElementById('landing-layer');
-                        landing.style.opacity = '0';
-                        setTimeout(() => landing.style.display = 'none', 800);
-                        const dash = document.getElementById('dashboard-layer');
-                        dash.style.display = 'block';
-                        setTimeout(() => dash.style.opacity = '1', 100);
-                        this.camera.position.z = 20;
-                        this.scene.rotation.z = 0;
-                    }
-                }, 16);
-            }
-
-            resize() {
-                this.width = window.innerWidth;
-                this.height = window.innerHeight;
-                this.camera.aspect = this.width/this.height;
-                this.camera.updateProjectionMatrix();
-                this.renderer.setSize(this.width, this.height);
-                this.composer.setSize(this.width, this.height);
-            }
-
-            animate() {
-                if(this.swarm) { this.swarm.rotation.y += 0.001; this.swarm.rotation.z -= 0.0005; }
-                this.composer.render();
-            }
-        }
-
-        const world = new World(document.getElementById('neural-canvas'));
-        setTimeout(() => {
-            const l = document.getElementById('loader');
-            l.style.opacity = '0';
-            setTimeout(() => l.style.display = 'none', 800);
-        }, 1500);
-
-        const btn = document.getElementById('init-btn');
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            btn.innerText = "ACCESSING...";
-            btn.style.boxShadow = "0 0 50px var(--neon)";
-            world.enterVault();
-        });
-        btn.addEventListener('touchstart', (e) => { e.preventDefault(); btn.click(); }, {passive: false});
-    </script>
+    <!-- MODULE ENTRY POINT -->
+    <script type="module" src="./src/app.js"></script>
 </body>
-                                                 </html>
+</html>
