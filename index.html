@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Neural Matrix Vault | The Singularity</title>
     
-    <!-- Google Tag Manager -->
+    <!-- SEO & ANALYTICS -->
+    <meta name="description" content="Neural Matrix Vault: High-Performance WebGL Architecture. We build the impossible.">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-P1PCVNCCE4"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -16,292 +17,63 @@
 
     <!-- TITANIUM STYLES -->
     <style>
-        :root { --void: #050505; --neon: #00f3ff; --glass: rgba(0, 20, 30, 0.6); --glass-border: rgba(0, 243, 255, 0.2); }
+        :root { 
+            --void: #050505; 
+            --neon: #00f3ff; 
+            --glass: rgba(5, 15, 20, 0.75); 
+            --glass-border: rgba(0, 243, 255, 0.3); 
+        }
         * { margin:0; padding:0; box-sizing:border-box; }
         body { background: var(--void); color: #fff; font-family: 'Courier New', monospace; overflow: hidden; height: 100vh; }
         
-        #neural-canvas { position: absolute; top:0; left:0; width:100%; height:100%; z-index:1; transition: filter 2s ease; }
+        #neural-canvas { position: absolute; top:0; left:0; width:100%; height:100%; z-index:1; }
         
-        /* --- LANDING LAYER --- */
-        #landing-layer { 
-            position: absolute; z-index:10; width:100%; height:100%; 
-            display:flex; flex-direction:column; justify-content:center; align-items:center;
-            transition: opacity 1s ease, transform 1s ease;
+        /* LAYERS */
+        .layer { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            z-index: 10; display: flex; flex-direction: column; 
+            transition: opacity 0.8s ease, transform 0.8s ease;
         }
-        
-        .hero-text { 
-            font-size: 2.5rem; text-align: center; margin-bottom:30px; 
-            text-shadow:0 0 20px rgba(0,243,255,0.5); line-height: 1.2;
-        }
-        
-        .highlight { color: var(--neon); font-weight: bold; text-shadow: 0 0 10px var(--neon); }
+
+        /* LANDING */
+        #landing-layer { justify-content: center; align-items: center; text-align: center; }
+        .hero-text { font-size: 2.2rem; margin-bottom: 30px; text-shadow: 0 0 20px rgba(0,243,255,0.4); }
+        .highlight { color: var(--neon); font-weight: bold; text-shadow: 0 0 15px var(--neon); }
         
         .cyber-button { 
-            background: rgba(0, 243, 255, 0.05); 
-            border: 1px solid var(--neon); 
-            color: var(--neon); 
-            padding: 15px 50px; 
-            font-size: 1rem; 
-            letter-spacing: 3px; 
-            cursor: pointer; 
-            text-transform: uppercase;
-            font-weight: bold;
-            transition: 0.3s;
-            box-shadow: 0 0 15px rgba(0,243,255,0.1);
+            background: rgba(0, 243, 255, 0.05); border: 1px solid var(--neon); color: var(--neon); 
+            padding: 15px 40px; font-size: 1rem; letter-spacing: 2px; cursor: pointer; 
+            font-weight: bold; text-transform: uppercase; transition: 0.3s;
         }
-        .cyber-button:active { background: var(--neon); color: #000; box-shadow: 0 0 40px var(--neon); }
+        .cyber-button:active { background: var(--neon); color: #000; box-shadow: 0 0 30px var(--neon); }
 
-        /* --- DASHBOARD LAYER (HIDDEN INITIALLY) --- */
-        #dashboard-layer {
-            position: absolute; z-index: 20; top: 0; left: 0; width: 100%; height: 100%;
-            padding: 20px;
-            display: none; /* Hidden until access granted */
-            opacity: 0;
-            overflow-y: auto;
-            background: rgba(0,0,0,0.4); /* Dim the 3D background */
-            backdrop-filter: blur(5px);
+        /* DASHBOARD */
+        #dashboard-layer { 
+            display: none; opacity: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);
+            padding: 20px; overflow-y: auto;
         }
-
-        .dash-header {
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid var(--glass-border);
-            padding-bottom: 15px; margin-bottom: 30px;
-        }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .card {
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            padding: 25px;
-            border-radius: 4px;
-            transition: transform 0.3s ease, border-color 0.3s ease;
+        .dash-header { border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        
+        .grid-container { 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; 
+            padding-bottom: 50px;
         }
         
-        .card:hover { transform: translateY(-5px); border-color: var(--neon); }
-        
-        .card h3 { color: var(--neon); margin-bottom: 10px; font-size: 1.2rem; }
-        .card p { color: #ccc; font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px; }
-        
-        .card-btn {
-            display: inline-block; padding: 8px 20px; 
-            border: 1px solid #fff; color: #fff; text-decoration: none;
-            font-size: 0.8rem; letter-spacing: 1px;
-            transition: 0.3s;
+        .card { 
+            background: var(--glass); border: 1px solid var(--glass-border); padding: 25px; 
+            border-radius: 4px; transition: 0.3s; cursor: pointer; position: relative;
         }
-        .card-btn:hover { background: #fff; color: #000; }
+        .card:hover { border-color: var(--neon); transform: translateY(-3px); box-shadow: 0 0 15px rgba(0,243,255,0.1); }
+        .card h3 { color: var(--neon); margin-bottom: 10px; font-size: 1.1rem; }
+        .card p { color: #ccc; font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px; }
 
-        /* LOADER */
-        #loader { 
-            position:absolute; z-index:99; width:100%; height:100%; 
-            background:#000; display:flex; flex-direction: column;
-            justify-content:center; align-items:center; transition:opacity 0.8s; 
+        /* MODAL (THE POPUP) */
+        #modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 50;
+            display: none; justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.5s;
         }
-        .loader-bar { width:150px; height:2px; background:var(--neon); animation:load 1.5s infinite; }
-        @keyframes load { 0%{transform:scaleX(0);} 50%{transform:scaleX(1);} 100%{transform:scaleX(0);} }
-        
-        /* Fade In Animation */
-        .fade-in { animation: fadeIn 1s forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-    </style>
-
-    <!-- THREE.JS IMPORT -->
-    <script type="importmap">
-        { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }
-    </script>
-</head>
-<body>
-    <div id="app">
-        <canvas id="neural-canvas"></canvas>
-        
-        <!-- LOADING SCREEN -->
-        <div id="loader"><div class="loader-bar"></div></div>
-
-        <!-- SCENE 1: THE PORTAL -->
-        <div id="landing-layer">
-            <h2 class="hero-text">NEURAL MATRIX<br><span class="highlight">VAULT</span></h2>
-            <button id="init-btn" class="cyber-button">ENTER SYSTEM</button>
-        </div>
-
-        <!-- SCENE 2: THE DASHBOARD (THE INTERIOR) -->
-        <div id="dashboard-layer">
-            <header class="dash-header">
-                <h1 style="font-size: 1.2rem; color: var(--neon);">:: COMMAND CONSOLE ::</h1>
-                <div style="font-size: 0.8rem; color: #888;">STATUS: <span style="color:#0f0">CONNECTED</span></div>
-            </header>
-
-            <div class="grid-container">
-                <!-- Artifact 1 -->
-                <article class="card fade-in" style="animation-delay: 0.2s">
-                    <h3>01 // THE ARCHITECT</h3>
-                    <p>Advanced algorithmic solutions for high-scale enterprise. We solve the impossible problems using WebGL and AI.</p>
-                    <a href="#" class="card-btn">INITIATE</a>
-                </article>
-
-                <!-- Artifact 2 -->
-                <article class="card fade-in" style="animation-delay: 0.4s">
-                    <h3>02 // NEURAL SEO</h3>
-                    <p>Dominate the search index. Our metadata protocols slice through competition like a double-edged sword.</p>
-                    <a href="#" class="card-btn">DEPLOY</a>
-                </article>
-
-                <!-- Artifact 3 -->
-                <article class="card fade-in" style="animation-delay: 0.6s">
-                    <h3>03 // THE NETWORK</h3>
-                    <p>Join the apex of human-AI collaboration. Access the private vault of tools and assets.</p>
-                    <a href="#" class="card-btn">ACCESS</a>
-                </article>
-            </div>
-        </div>
-    </div>
-
-    <!-- LOGIC CORE -->
-    <script type="module">
-        import * as THREE from 'three';
-        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
-
-        class World {
-            constructor(canvas) {
-                this.canvas = canvas;
-                this.width = window.innerWidth;
-                this.height = window.innerHeight;
-                
-                this.renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: "high-performance" });
-                this.renderer.setSize(this.width, this.height);
-                this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-                
-                this.scene = new THREE.Scene();
-                this.scene.background = new THREE.Color(0x050505);
-
-                this.camera = new THREE.PerspectiveCamera(60, this.width / this.height, 0.1, 1000);
-                this.camera.position.set(0, 0, 15);
-
-                // LIGHTING
-                this.scene.add(new THREE.AmbientLight(0x404040, 2));
-                const pLight = new THREE.PointLight(0x00f3ff, 3, 50);
-                pLight.position.set(5, 5, 5);
-                this.scene.add(pLight);
-
-                // GEOMETRY
-                this.initSwarm();
-
-                // POST FX
-                this.composer = new EffectComposer(this.renderer);
-                this.composer.addPass(new RenderPass(this.scene, this.camera));
-                this.composer.addPass(new UnrealBloomPass(new THREE.Vector2(this.width, this.height), 1.5, 0.4, 0.85));
-
-                window.addEventListener('resize', () => this.resize());
-                this.renderer.setAnimationLoop(() => this.animate());
-            }
-
-            initSwarm() {
-                const geo = new THREE.OctahedronGeometry(0.15, 0);
-                const mat = new THREE.MeshStandardMaterial({ 
-                    color: 0x111111, roughness: 0.3, metalness: 0.9, 
-                    emissive: 0x00f3ff, emissiveIntensity: 0.4 
-                });
-                this.swarm = new THREE.InstancedMesh(geo, mat, 1200);
-                
-                const dummy = new THREE.Object3D();
-                for(let i=0; i<1200; i++) {
-                    const r = 8 + Math.random() * 5;
-                    const theta = Math.random() * Math.PI * 2;
-                    const phi = Math.acos(2 * Math.random() - 1);
-                    dummy.position.set(
-                        r * Math.sin(phi) * Math.cos(theta),
-                        r * Math.sin(phi) * Math.sin(theta),
-                        r * Math.cos(phi)
-                    );
-                    dummy.lookAt(0,0,0);
-                    dummy.scale.setScalar(Math.random() + 0.5);
-                    dummy.updateMatrix();
-                    this.swarm.setMatrixAt(i, dummy.matrix);
-                }
-                this.scene.add(this.swarm);
-            }
-
-            enterVault() {
-                // 1. ANIMATE CAMERA (The Warp)
-                let speed = 0.2;
-                const tl = setInterval(() => {
-                    this.camera.position.z -= speed;
-                    speed *= 1.1; // Accelerate
-                    this.scene.rotation.z += 0.05; // Spin effect
-
-                    if(this.camera.position.z < -2) {
-                        clearInterval(tl);
-                        
-                        // 2. SWITCH UI
-                        document.getElementById('landing-layer').style.opacity = '0';
-                        setTimeout(() => {
-                            document.getElementById('landing-layer').style.display = 'none';
-                            
-                            // Show Dashboard
-                            const dash = document.getElementById('dashboard-layer');
-                            dash.style.display = 'block';
-                            // Trigger reflow for transition
-                            void dash.offsetWidth; 
-                            dash.style.opacity = '1';
-                        }, 1000);
-
-                        // 3. RESET CAMERA FOR BACKGROUND
-                        this.camera.position.z = 20;
-                        this.scene.rotation.z = 0;
-                    }
-                }, 16);
-            }
-
-            resize() {
-                this.width = window.innerWidth;
-                this.height = window.innerHeight;
-                this.camera.aspect = this.width / this.height;
-                this.camera.updateProjectionMatrix();
-                this.renderer.setSize(this.width, this.height);
-                this.composer.setSize(this.width, this.height);
-            }
-
-            animate() {
-                if(this.swarm) {
-                    this.swarm.rotation.y += 0.001;
-                    this.swarm.rotation.z -= 0.0005;
-                }
-                this.composer.render();
-            }
-        }
-
-        // INITIALIZATION
-        const world = new World(document.getElementById('neural-canvas'));
-        
-        // REMOVE LOADER
-        setTimeout(() => {
-            document.getElementById('loader').style.opacity = '0';
-            setTimeout(() => document.getElementById('loader').style.display = 'none', 800);
-        }, 1500);
-
-        // HANDLE BUTTON CLICK
-        const btn = document.getElementById('init-btn');
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            btn.innerText = "ACCESSING...";
-            btn.style.boxShadow = "0 0 50px var(--neon)";
-            world.enterVault();
-        });
-        
-        // Touch support
-        btn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            btn.click();
-        }, {passive: false});
-
-    </script>
-</body>
-</html>
+        .modal-content {
+            background: #0a0a0a; border: 1px solid var(--neon);
+            width: 90%; max-width: 500px; padding: 30px;
