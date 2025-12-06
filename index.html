@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Neural Matrix Vault | Apex Architecture</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P1PCVNCCE4"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-P1PCVNCCE4');
+    </script>
+    <link rel="stylesheet" href="style.css">
+    <script type="importmap">
+        { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }
+    </script>
+</head>
+<body>
+    <div id="app">
+        <canvas id="neural-canvas"></canvas>
+        <div id="ui-layer">
+            <header class="hud-component"><h1 class="glitch">NEURAL MATRIX</h1></header>
+            <main class="hud-center">
+                <h2 class="hero-text">ARCHITECTING<br><span class="highlight">THE IMPOSSIBLE</span></h2>
+                <button id="init-btn" class="cyber-button">INITIALIZE</button>
+            </main>
+            <footer class="hud-component"><div class="metric">SYSTEM: ONLINE</div></footer>
+        </div>
+        <div id="loader"><div class="loader-bar"></div></div>
+    </div>
+    <script type="module" src="./src/app.js"></script>
+</body>
+</html>
