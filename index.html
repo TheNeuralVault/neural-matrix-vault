@@ -96,8 +96,9 @@
         <!-- FOOTER -->
         <footer class="footer">
             <div>&copy; 2025 NEURAL MATRIX VAULT</div>
-            <div>
-                <span>CONTACT: +1 (555) 019-2834</span> <!-- REPLACE WITH YOUR REAL NUMBER -->
+            <div style="display:flex; gap:20px; align-items:center;">
+                <!-- CLICK TO CALL -->
+                <a href="tel:+19705017151" style="color:var(--text-secondary); margin:0;">+1 (970) 501-7151</a>
                 <a href="mailto:theneuralvaultai@gmail.com">EMAIL</a>
                 <a href="legal.html">LEGAL</a>
             </div>
@@ -197,7 +198,7 @@
             const hashArray = Array.from(new Uint8Array(hashBuffer));
             const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
-            console.log("Input:", input); // DEBUG: Check console if it fails
+            console.log("Input:", input);
             console.log("Hash:", hashHex);
 
             if (VALID_HASHES.includes(hashHex)) {
