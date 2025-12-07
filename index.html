@@ -5,282 +5,289 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Neural Matrix Vault | The Singularity</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#050505">
+    <meta name="theme-color" content="#000000">
     
-    <!-- FONTS -->
+    <!-- PREMIUM FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
 
-    <!-- CSS -->
     <style>
         :root { 
-            --void: #050505; 
-            --neon: #00f3ff; 
-            --neon-pink: #bc13fe;
-            --glass: rgba(10, 20, 30, 0.85); 
-            --glass-border: rgba(0, 243, 255, 0.3); 
+            --void: #000000; 
+            --neon-blue: #00f3ff; 
+            --neon-purple: #bc13fe; 
+            --neon-gold: #ffd700;
+            --glass-bg: rgba(10, 10, 10, 0.7); 
+            --glass-border: rgba(255, 255, 255, 0.1); 
         }
+        
         * { margin:0; padding:0; box-sizing:border-box; }
-
+        
         body { 
-            background: radial-gradient(circle at center, #1a1a2e 0%, #000000 100%);
+            background: var(--void); 
             color: #fff; 
             font-family: 'Rajdhani', sans-serif; 
             overflow: hidden; 
             width: 100vw; height: 100dvh;
         }
 
-        /* SCANLINES */
-        body::after {
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
-            background-size: 100% 4px; z-index: 2; pointer-events: none;
-        }
-
+        /* 3D CANVAS BEHIND EVERYTHING */
         #neural-canvas { position: absolute; top:0; left:0; width:100%; height:100%; z-index:1; }
 
-        .layer { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            z-index: 10; display: flex; flex-direction: column; 
-            transition: opacity 0.5s ease; pointer-events: none; 
+        /* MAIN UI CONTAINER (The HUD) */
+        #ui-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10;
+            display: flex; flex-direction: column;
+            overflow-y: auto;
+            background: radial-gradient(circle at center, transparent 0%, #000000 120%);
         }
-        .active-layer { pointer-events: auto; }
 
-        /* HERO SECTION */
-        #landing-layer { justify-content: center; align-items: center; text-align: center; }
-        .hero-text { 
-            font-size: clamp(3rem, 8vw, 6rem); line-height: 0.9; margin-bottom: 20px; 
-            text-transform: uppercase; font-weight: 700;
-            text-shadow: 0 0 30px rgba(0,243,255,0.6); letter-spacing: 2px;
+        /* HEADER */
+        .hud-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 5%;
+            border-bottom: 1px solid var(--glass-border);
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            position: sticky; top: 0; z-index: 50;
+        }
+
+        .brand {
+            font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 1.5rem;
+            color: #fff; letter-spacing: 2px;
+            text-shadow: 0 0 20px var(--neon-blue);
+        }
+
+        /* INNER CIRCLE BUTTON (FRONT AND CENTER) */
+        .inner-circle-btn {
+            background: rgba(188, 19, 254, 0.1);
+            border: 1px solid var(--neon-purple);
+            color: var(--neon-purple);
+            padding: 10px 20px;
+            font-family: 'Orbitron', sans-serif; font-size: 0.8rem; letter-spacing: 1px;
+            cursor: pointer; transition: 0.3s;
+            box-shadow: 0 0 15px rgba(188, 19, 254, 0.2);
+            animation: pulse-purple 2s infinite;
+        }
+        .inner-circle-btn:hover {
+            background: var(--neon-purple); color: #000; box-shadow: 0 0 40px var(--neon-purple);
+        }
+
+        /* CONTENT AREA */
+        .main-content {
+            flex-grow: 1;
+            padding: 40px 5%;
+            max-width: 1400px; margin: 0 auto; width: 100%;
+        }
+
+        /* HERO TEXT */
+        .hero-title {
+            font-family: 'Orbitron', sans-serif; font-size: clamp(2rem, 5vw, 4rem);
+            line-height: 1; margin-bottom: 10px;
+            background: linear-gradient(to right, #fff, var(--neon-blue));
+            -webkit-background-clip: text; color: transparent;
         }
         
-        /* THE HACK CHALLENGE BADGE */
         .security-badge {
-            font-family: 'Share Tech Mono', monospace;
-            border: 1px solid var(--neon); color: var(--neon);
-            padding: 8px 15px; font-size: 0.8rem; cursor: pointer;
-            display: inline-block; margin-bottom: 30px;
-            background: rgba(0, 243, 255, 0.05);
-            transition: 0.3s;
+            display: inline-block;
+            font-size: 0.7rem; color: var(--neon-blue); letter-spacing: 2px;
+            border: 1px solid var(--neon-blue); padding: 5px 10px;
+            margin-bottom: 40px; background: rgba(0, 243, 255, 0.05);
+            cursor: pointer;
         }
-        .security-badge:hover { background: var(--neon); color: #000; box-shadow: 0 0 20px var(--neon); }
+        .security-badge:hover { background: var(--neon-blue); color: #000; }
 
-        .cyber-button { 
-            background: rgba(0, 243, 255, 0.1); border: 1px solid var(--neon); 
-            color: var(--neon); padding: 15px 50px; font-size: 1.2rem; 
-            letter-spacing: 3px; cursor: pointer; font-family: 'Rajdhani', sans-serif; 
-            font-weight: 700; text-transform: uppercase; transition: 0.3s; 
-            backdrop-filter: blur(5px);
+        /* PRODUCT GRID */
+        .armory-grid {
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 30px;
         }
-        .cyber-button:hover { background: var(--neon); color: #000; box-shadow: 0 0 50px var(--neon); }
 
-        /* DASHBOARD */
-        #dashboard-layer { display: none; padding: 20px; overflow-y: auto; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); }
-        .dash-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid var(--glass-border); margin-bottom: 30px; }
-        
-        .mic-toggle {
-            font-family: 'Share Tech Mono', monospace; color: #aaa; cursor: pointer; border: 1px solid #333; padding: 5px 10px; font-size: 0.8rem; transition: 0.3s;
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            transition: 0.3s; cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
-        .mic-toggle.active { color: var(--neon-pink); border-color: var(--neon-pink); text-shadow: 0 0 10px var(--neon-pink); }
-
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto 80px auto; }
-
-        .card { 
-            background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
-            border: 1px solid var(--glass-border); padding: 30px; 
-            transition: 0.3s; cursor: pointer; position: relative; overflow: hidden;
+        .card::after {
+            content: ""; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px;
+            background: var(--neon-blue); transform: scaleX(0); transition: 0.3s; transform-origin: left;
         }
-        .card:hover { transform: translateY(-5px); border-color: var(--neon); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-        .card h3 { font-size: 1.5rem; margin-bottom: 10px; text-transform: uppercase; color: #fff; }
-        .card p { color: #bbb; font-size: 1rem; margin-bottom: 20px; }
-        .card-price { font-size: 1.2rem; color: var(--neon-pink); font-weight: 700; }
+        .card:hover { transform: translateY(-5px); border-color: #fff; }
+        .card:hover::after { transform: scaleX(1); }
 
-        /* THE PRODUCT MODAL (THE BRIEFING ROOM) */
-        #modal-overlay {
+        .card h3 { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; margin-bottom: 10px; color: #fff; }
+        .card p { color: #aaa; font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px; }
+        .price { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; color: var(--neon-gold); }
+
+        /* MEMBER LOGIN MODAL */
+        #login-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 100;
             display: none; justify-content: center; align-items: center;
         }
-        .modal-content {
-            background: #050505; border: 1px solid var(--neon); width: 95%; max-width: 800px; padding: 40px;
-            position: relative; box-shadow: 0 0 50px rgba(0,243,255,0.1); max-height: 90vh; overflow-y: auto;
+        .login-box {
+            background: #000; border: 1px solid var(--neon-purple);
+            padding: 40px; width: 90%; max-width: 400px; text-align: center;
+            box-shadow: 0 0 50px rgba(188, 19, 254, 0.2);
         }
-        .modal-close { position: absolute; top: 20px; right: 20px; font-size: 2rem; color: #555; cursor: pointer; }
-        .modal-close:hover { color: var(--neon); }
+        .cyber-input {
+            width: 100%; background: #111; border: 1px solid #333;
+            padding: 15px; color: #fff; font-family: 'Orbitron', sans-serif;
+            margin: 20px 0; outline: none; transition: 0.3s;
+        }
+        .cyber-input:focus { border-color: var(--neon-purple); }
 
-        .split-view { display: flex; flex-wrap: wrap; gap: 40px; margin: 30px 0; }
-        .split-col { flex: 1; min-width: 300px; }
-        .split-col h4 { color: var(--neon-pink); margin-bottom: 15px; font-family: 'Share Tech Mono', monospace; border-bottom: 1px solid #333; padding-bottom: 5px; }
-        .split-col p { color: #ccc; line-height: 1.6; font-size: 1rem; }
-        .tech-list li { color: var(--neon); font-family: 'Share Tech Mono', monospace; margin-bottom: 5px; font-size: 0.9rem; }
+        /* INNER CIRCLE FEED (Hidden by default) */
+        #inner-circle-ui {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 200; padding: 20px;
+            overflow-y: auto;
+        }
+        .feed-container { max-width: 800px; margin: 50px auto; border-left: 2px solid var(--neon-purple); padding-left: 20px; }
+        .feed-item { margin-bottom: 30px; }
+        .feed-user { color: var(--neon-purple); font-weight: bold; font-family: 'Orbitron', sans-serif; }
+        .feed-msg { color: #ddd; margin-top: 5px; font-size: 1rem; }
 
-        .modal-action { display: block; width: 100%; text-align: center; background: var(--neon); color: #000; padding: 20px; font-weight: bold; font-size: 1.2rem; text-decoration: none; text-transform: uppercase; transition: 0.3s; margin-top: 20px; }
-        .modal-action:hover { background: #fff; box-shadow: 0 0 40px var(--neon); }
-
-        /* HACK CHALLENGE MODAL */
-        #hack-modal { display: none; }
-        .terminal-text { color: #0f0; font-family: 'Share Tech Mono', monospace; font-size: 0.9rem; margin-bottom: 20px; }
-
-        #loader { position:absolute; z-index:999; width:100%; height:100%; background:#000; display:flex; justify-content:center; align-items:center; }
-        .loader-bar { width:200px; height:4px; background:var(--neon); animation:load 1.5s infinite; }
-        @keyframes load { 0%{transform:scaleX(0);} 50%{transform:scaleX(1);} 100%{transform:scaleX(0);} }
+        @keyframes pulse-purple { 0% { box-shadow: 0 0 10px rgba(188,19,254,0.2); } 50% { box-shadow: 0 0 20px rgba(188,19,254,0.6); } 100% { box-shadow: 0 0 10px rgba(188,19,254,0.2); } }
+        
+        /* HACK CHALLENGE */
+        #hack-modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:999; align-items:center; justify-content:center; }
     </style>
-
     <script type="importmap"> { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } } </script>
 </head>
 <body>
-    <div id="app">
-        <canvas id="neural-canvas"></canvas>
-        <div id="loader"><div class="loader-bar"></div></div>
 
-        <!-- LANDING -->
-        <div id="landing-layer" class="layer active-layer">
-            <div style="z-index: 5;">
-                <h1 class="hero-text">NEURAL<br><span style="color:var(--neon)">MATRIX</span></h1>
-                
-                <!-- THE CHALLENGE -->
-                <div class="security-badge" onclick="openHackChallenge()">
-                    🔒 SECURITY: MILITARY-GRADE. CLICK TO VERIFY.
-                </div>
-                <br>
-                <button id="init-btn" class="cyber-button">ENTER SYSTEM</button>
-            </div>
-        </div>
+    <!-- 3D BACKGROUND -->
+    <canvas id="neural-canvas"></canvas>
 
-        <!-- DASHBOARD -->
-        <div id="dashboard-layer" class="layer">
-            <div class="dash-header">
-                <div style="font-size:1.5rem; font-weight:bold; color:var(--neon);">:: ARMORY</div>
-                <div id="mic-trigger" class="mic-toggle">[ CONNECT NEURAL LINK ]</div>
-            </div>
+    <!-- MAIN UI HUD -->
+    <div id="ui-layer">
+        
+        <!-- HEADER -->
+        <header class="hud-header">
+            <div class="brand">NEURAL<span style="color:var(--neon-blue)">VAULT</span></div>
+            <button class="inner-circle-btn" onclick="openLogin()">INNER CIRCLE LOGIN</button>
+        </header>
 
-            <div class="grid-container">
-                <!-- PRODUCT 1 -->
-                <article class="card" onclick="openModal('KIT')">
-                    <h3>TITANIUM PROTOCOL</h3>
-                    <p>The Source Code. The Engine. The Standard.</p>
-                    <div class="card-price">$497.00</div>
-                </article>
-                <!-- PRODUCT 2 -->
-                <article class="card" onclick="openModal('SEO')">
-                    <h3>SEO DOMINANCE</h3>
-                    <p>Force Google to rank you #1.</p>
-                    <div class="card-price">$2,500.00</div>
-                </article>
-                <!-- PRODUCT 3 -->
-                <article class="card" onclick="openModal('CONSULT')">
-                    <h3>APEX STRATEGY</h3>
-                    <p>Me. You. Total World Domination.</p>
-                    <div class="card-price">$5,000.00</div>
-                </article>
-                <!-- PRODUCT 4 -->
-                <article class="card" onclick="openModal('NETWORK')">
-                    <h3>INNER CIRCLE</h3>
-                    <p>The Private Network.</p>
-                    <div class="card-price">$97/mo</div>
-                </article>
-            </div>
+        <!-- CONTENT -->
+        <main class="main-content">
             
-            <!-- ADMIN HIDDEN -->
-            <div style="position:fixed; bottom:0; right:0; width:50px; height:50px;" onclick="location.href='console_x1.html'"></div>
-        </div>
+            <!-- HERO -->
+            <div style="margin-bottom: 60px;">
+                <h1 class="hero-title">ARCHITECTING THE<br>IMPOSSIBLE</h1>
+                <div class="security-badge" onclick="document.getElementById('hack-modal').style.display='flex'">
+                    🔒 SECURITY: MATHEMATICALLY IMPOSSIBLE TO BREACH
+                </div>
+            </div>
 
-        <!-- BRIEFING ROOM MODAL -->
-        <div id="modal-overlay">
-            <div class="modal-content">
-                <div class="modal-close" onclick="closeModal()">×</div>
-                <h2 id="modal-title" style="font-size: 2.5rem; color: #fff; margin-bottom: 10px;">TITLE</h2>
-                
-                <div class="split-view">
-                    <!-- PLAIN ENGLISH -->
-                    <div class="split-col">
-                        <h4>STRATEGIC VALUE</h4>
-                        <p id="modal-strategy">Description goes here.</p>
-                    </div>
-                    <!-- TECHNICAL -->
-                    <div class="split-col">
-                        <h4>TECHNICAL SPECS</h4>
-                        <ul id="modal-tech" class="tech-list"></ul>
-                    </div>
+            <!-- ARMORY -->
+            <div class="armory-grid">
+                <!-- CARD 1 -->
+                <div class="card" onclick="window.open('https://buy.stripe.com/cNiaEX0KQ2Amcyz1aP8g008')">
+                    <h3 style="color:var(--neon-blue)">TITANIUM PROTOCOL</h3>
+                    <p>The Source Code Engine. Pre-optimized WebGL infrastructure.</p>
+                    <div class="price">$497.00</div>
                 </div>
 
-                <a href="#" id="modal-link" target="_blank" class="modal-action">ACQUIRE ASSET</a>
-            </div>
-        </div>
+                <!-- CARD 2 -->
+                <div class="card" onclick="window.open('https://buy.stripe.com/14A9AT2SYgrcaqr06L8g009')">
+                    <h3 style="color:var(--neon-blue)">SEO DOMINANCE</h3>
+                    <p>JSON-LD Injection. Force Google Authority.</p>
+                    <div class="price">$2,500.00</div>
+                </div>
 
-        <!-- HACK CHALLENGE MODAL -->
-        <div id="hack-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:200;display:none;justify-content:center;align-items:center;">
-            <div style="max-width:600px; padding:30px; border:1px solid #0f0; background:#050505;">
-                <h2 style="color:#0f0; margin-bottom:20px;">:: SYSTEM INTEGRITY CHALLENGE ::</h2>
-                <p class="terminal-text">
-                    > SCANNING FOR VULNERABILITIES... 0 FOUND.<br>
-                    > ENCRYPTION: SHA-256 CLIENT-SIDE HASHING.<br>
-                    > SERVER STATUS: SERVERLESS (UNHACKABLE).<br>
-                    <br>
-                    We do not use standard login forms. We use cryptographic math. 
-                    If you can reverse engineer the SHA-256 hash in our 'console_x1.html' file, 
-                    we will give you the Titanium Protocol for free.
-                    <br><br>
-                    Good luck. You will need it.
-                </p>
-                <button class="cyber-button" style="border-color:#0f0; color:#0f0; background:transparent;" onclick="document.getElementById('hack-modal').style.display='none'">CLOSE TERMINAL</button>
-            </div>
-        </div>
+                <!-- CARD 3 -->
+                <div class="card" onclick="window.open('https://buy.stripe.com/3cI6oH1OUcaWcyz2eT8g00a')">
+                    <h3 style="color:var(--neon-blue)">APEX STRATEGY</h3>
+                    <p>1-on-1 Consultation. Business Reconstruction.</p>
+                    <div class="price">$5,000.00</div>
+                </div>
 
+                <!-- CARD 4 (INNER CIRCLE PROMO) -->
+                <div class="card" style="border-color:var(--neon-purple);" onclick="window.open('https://buy.stripe.com/6oU3cv5165My7ef6v98g00b')">
+                    <h3 style="color:var(--neon-purple)">JOIN INNER CIRCLE</h3>
+                    <p>Weekly Asset Drops. Private Network Access.</p>
+                    <div class="price" style="color:#fff;">$97/mo</div>
+                </div>
+            </div>
+
+            <!-- FOOTER -->
+            <div style="margin-top: 80px; color:#555; font-size:0.8rem; text-align:center;">
+                &copy; 2025 NEURAL MATRIX VAULT | <a href="legal.html" style="color:#777; text-decoration:none;">LEGAL</a>
+            </div>
+        </main>
     </div>
-    <script type="module" src="./src/app.js"></script>
 
-    <!-- UI LOGIC -->
-    <script>
-        const PRODUCTS = {
-            'KIT': {
-                title: 'TITANIUM PROTOCOL',
-                strategy: "You are not buying code; you are buying time. This is the exact engine running this website. It is pre-optimized, SEO-hardened, and ready to deploy. Stop building from scratch. Start at the finish line.",
-                tech: ["Three.js WebGL Renderer", "GLSL Custom Shaders", "Mobile-First Responsive", "No External Frameworks"],
-                link: 'https://buy.stripe.com/cNiaEX0KQ2Amcyz1aP8g008'
-            },
-            'SEO': {
-                title: 'SEO DOMINANCE',
-                strategy: "Google is a robot. We speak its language. We don't write 'blogs'; we inject raw data structures (JSON-LD) that force search engines to index you as an authority.",
-                tech: ["Schema.org Implementation", "Canonical URL Strategy", "Lighthouse Score > 95", "Meta-Tag Injection"],
-                link: 'https://buy.stripe.com/14A9AT2SYgrcaqr06L8g009'
-            },
-            'CONSULT': {
-                title: 'APEX STRATEGY',
-                strategy: "A 1-on-1 architecture session. We tear down your current business model and rebuild it using automation, AI, and high-ticket psychology.",
-                tech: ["3-Hour Deep Dive", "Tech Stack Audit", "Automation Blueprint", "30-Day Support"],
-                link: 'https://buy.stripe.com/3cI6oH1OUcaWcyz2eT8g00a'
-            },
-            'NETWORK': {
-                title: 'INNER CIRCLE',
-                strategy: "Your network is your net worth. Join the private channel where we drop new code, new assets, and new strategies every week.",
-                tech: ["Discord Private Access", "Weekly Code Drops", "Live Reviews", "Beta Features"],
-                link: 'https://buy.stripe.com/6oU3cv5165My7ef6v98g00b'
-            }
-        };
+    <!-- MEMBER LOGIN MODAL -->
+    <div id="login-overlay">
+        <div class="login-box">
+            <h2 style="color:#fff; font-family:'Orbitron', sans-serif;">MEMBER ACCESS</h2>
+            <input type="password" id="member-pass" class="cyber-input" placeholder="ENTER KEY">
+            <button class="inner-circle-btn" style="width:100%" onclick="verifyMember()">AUTHENTICATE</button>
+            <p id="login-msg" style="color:red; margin-top:10px; font-size:0.8rem;"></p>
+            <div style="margin-top:20px; color:#666; cursor:pointer;" onclick="document.getElementById('login-overlay').style.display='none'">CLOSE</div>
+        </div>
+    </div>
 
-        window.openModal = function(key) {
-            const item = PRODUCTS[key];
-            document.getElementById('modal-title').innerText = item.title;
-            document.getElementById('modal-strategy').innerText = item.strategy;
+    <!-- INNER CIRCLE INTERFACE (THE HIDDEN LAYER) -->
+    <div id="inner-circle-ui">
+        <header class="hud-header">
+            <div class="brand" style="color:var(--neon-purple)">INNER<span style="color:#fff">CIRCLE</span></div>
+            <button class="inner-circle-btn" onclick="location.reload()">LOGOUT</button>
+        </header>
+        <div class="feed-container">
+            <h1 style="color:var(--neon-purple); font-family:'Orbitron'; margin-bottom:40px;">// SECURE FEED</h1>
             
-            const list = document.getElementById('modal-tech');
-            list.innerHTML = '';
-            item.tech.forEach(t => {
-                const li = document.createElement('li'); li.innerText = ">> " + t; list.appendChild(li);
-            });
+            <div class="feed-item">
+                <div class="feed-user">MAGNUS OPUS <span style="color:#555; font-size:0.7rem;">:: TODAY</span></div>
+                <div class="feed-msg">New 'Glass-Morphism' shader pack uploaded to the repository. Download it below.</div>
+                <button class="inner-circle-btn" style="margin-top:10px; font-size:0.7rem;">DOWNLOAD ASSET_PACK_V4.ZIP</button>
+            </div>
 
-            document.getElementById('modal-link').href = item.link;
-            document.getElementById('modal-overlay').style.display = 'flex';
-        };
+            <div class="feed-item">
+                <div class="feed-user">SYSTEM <span style="color:#555; font-size:0.7rem;">:: YESTERDAY</span></div>
+                <div class="feed-msg">SEO Algorithm update detected. Adjusting Titanium Protocol metadata strategies.</div>
+            </div>
+        </div>
+    </div>
 
-        window.closeModal = function() {
-            document.getElementById('modal-overlay').style.display = 'none';
-        };
+    <!-- HACK CHALLENGE -->
+    <div id="hack-modal">
+        <div class="login-box" style="border-color:#0f0; box-shadow:0 0 50px rgba(0,255,0,0.1);">
+            <h2 style="color:#0f0; font-family:'Orbitron';">SYSTEM INTEGRITY</h2>
+            <p style="color:#0f0; font-family:monospace; margin:20px 0; text-align:left;">
+                > ENCRYPTION: SHA-256 (CLIENT-SIDE)<br>
+                > VULNERABILITIES: 0<br>
+                > STATUS: IMPENETRABLE
+            </p>
+            <p style="color:#ccc; font-size:0.9rem;">
+                We don't use servers. We use math. If you can crack our Admin Console (`console_x1.html`), the Titanium Source Code is yours for free.
+            </p>
+            <button class="inner-circle-btn" style="width:100%; border-color:#0f0; color:#0f0; box-shadow:none;" onclick="document.getElementById('hack-modal').style.display='none'">ACKNOWLEDGE</button>
+        </div>
+    </div>
 
-        window.openHackChallenge = function() {
-            document.getElementById('hack-modal').style.display = 'flex';
+    <script type="module" src="./src/app.js"></script>
+    <script>
+        function openLogin() {
+            document.getElementById('login-overlay').style.display = 'flex';
+        }
+
+        function verifyMember() {
+            const p = document.getElementById('member-pass').value.trim();
+            if(p === 'NEURAL_MEMBER') {
+                document.getElementById('login-overlay').style.display = 'none';
+                document.getElementById('ui-layer').style.display = 'none';
+                document.getElementById('inner-circle-ui').style.display = 'block';
+            } else {
+                document.getElementById('login-msg').innerText = "ACCESS DENIED";
+            }
         }
     </script>
 </body>
