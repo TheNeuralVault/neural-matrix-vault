@@ -3,23 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TERMINAL | ENCRYPTED</title>
+    <title>TERMINAL | DIAGNOSTIC</title>
     <style>
         body { background: #000; color: #0f0; font-family: 'Courier New', monospace; padding: 20px; }
         h1, h2 { border-bottom: 1px solid #0f0; padding-bottom: 10px; }
         input, textarea { width: 100%; background: #111; border: 1px solid #0f0; color: #fff; padding: 10px; margin-bottom: 10px; }
         button { background: #0f0; color: #000; padding: 10px 20px; border: none; font-weight: bold; cursor: pointer; }
         .panel { display: none; margin-top: 20px; border: 1px solid #333; padding: 20px; }
+        #debug-console { margin-top: 20px; color: yellow; font-size: 10px; border: 1px dashed yellow; padding: 10px; word-break: break-all; display: none; }
     </style>
 </head>
 <body>
+
     <div id="auth-gate">
         <h1 style="color:red">:: QUANTUM ENCRYPTION WALL ::</h1>
         <p>IDENTIFY YOURSELF.</p>
-        <input type="password" id="admin-pass" placeholder="ENTER ACCESS KEY">
+        <input type="text" id="admin-pass" placeholder="ENTER ACCESS KEY">
         <button onclick="verifyIdentity()">INITIATE HANDSHAKE</button>
-        <p id="status" style="margin-top:10px;"></p>
+        
+        <!-- DIAGNOSTIC OUTPUT -->
+        <div id="debug-console"></div>
     </div>
+
     <div id="admin-interface" style="display:none;">
         <h1>:: ACCESS GRANTED ::</h1>
         <button onclick="show('seo')">SEO ENGINE</button>
@@ -35,31 +40,41 @@
             <button onclick="dlSource()">DOWNLOAD SOURCE</button>
         </div>
     </div>
+
     <script>
-        // Correct Hash for 'NEURAL_PRIME'
+        // TARGET: NEURAL_PRIME
         const TARGET_HASH = "fb57b29c20faf81d86757bda0839b5da8c0b76952a11edc6d1c9c6abebf5f9de";
-        
+
         async function sha256(m) {
             const b = new TextEncoder().encode(m);
             const h = await crypto.subtle.digest('SHA-256', b);
             return Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2,'0')).join('');
         }
-        async function verifyIdentity() {
-            // .trim() removes the invisible mobile spacebar error
-            const i = document.getElementById('admin-pass').value.trim();
-            const h = await sha256(i);
-            
-            // Debugging (Remove this in final production if you want absolute stealth, keeps it for now so you see what's happening)
-            console.log("Input:", i); 
-            console.log("Generated Hash:", h);
 
-            if (h === TARGET_HASH) {
-                document.getElementById('auth-gate').style.display = 'none';
-                document.getElementById('admin-interface').style.display = 'block';
-            } else { 
-                document.getElementById('status').innerText = "ACCESS DENIED."; 
+        async function verifyIdentity() {
+            const rawInput = document.getElementById('admin-pass').value;
+            const cleanInput = rawInput.trim(); // Remove spaces
+            const hash = await sha256(cleanInput);
+            
+            // SHOW THE DATA
+            const debug = document.getElementById('debug-console');
+            debug.style.display = 'block';
+            debug.innerHTML = `
+                [DIAGNOSTIC REPORT]<br>
+                INPUT RECEIVED: "${cleanInput}"<br>
+                HASH GENERATED: ${hash}<br>
+                HASH EXPECTED : ${TARGET_HASH}<br>
+                MATCH STATUS  : ${hash === TARGET_HASH ? "TRUE" : "FALSE"}
+            `;
+
+            if (hash === TARGET_HASH) {
+                setTimeout(() => {
+                    document.getElementById('auth-gate').style.display = 'none';
+                    document.getElementById('admin-interface').style.display = 'block';
+                }, 1000);
             }
         }
+
         function show(id) { document.querySelectorAll('.panel').forEach(p=>p.style.display='none'); document.getElementById('p-'+id).style.display='block'; }
         function genSEO() {
             const d=document.getElementById('d').value, n=document.getElementById('n').value, de=document.getElementById('de').value;
