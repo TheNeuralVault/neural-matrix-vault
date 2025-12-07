@@ -2,102 +2,211 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>COMMAND | NEURAL ADMIN</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    <style>
-        body { background: #111; color: #fff; font-family: sans-serif; padding: 20px; }
-        input { padding: 10px; width: 100%; margin-bottom: 10px; background: #222; border: 1px solid #444; color: #fff; }
-        button { padding: 10px 20px; background: #fff; color: #000; border: none; font-weight: bold; cursor: pointer; }
-        .panel { border: 1px solid #333; padding: 20px; margin-top: 20px; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Neural Matrix Vault | Enterprise Digital Architecture</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#050505">
+    
+    <!-- PROFESSIONAL FONT: INTER -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- ANALYTICS -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P1PCVNCCE4"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-P1PCVNCCE4');
+    </script>
+
+    <script type="importmap"> { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } } </script>
 </head>
 <body>
-    <h1>ADMIN CONSOLE</h1>
+
+    <!-- 3D ENGINE (SUBTLE BACKGROUND) -->
+    <canvas id="neural-canvas"></canvas>
     
-    <div id="auth">
-        <input type="password" id="pass" placeholder="MASTER KEY">
-        <button onclick="login()">LOGIN</button>
-    </div>
+    <!-- LOADER -->
+    <div id="loader"><div style="color:#fff; font-size:0.8rem; letter-spacing:2px;">INITIALIZING PROTOCOLS...</div></div>
 
-    <div id="dash" style="display:none;">
-        <div class="panel">
-            <h3>KEY FORGE</h3>
-            <p>Generate Client Access Keys</p>
-            <button onclick="alert('Use Chrome Console to generate SHA-256 for now.')">OPEN TOOLS</button>
+    <!-- MAIN UI -->
+    <div id="ui-layer">
+        
+        <!-- HEADER -->
+        <header class="header">
+            <div class="brand">NEURAL MATRIX VAULT</div>
+            <button class="login-btn" onclick="openLogin()">CLIENT PORTAL</button>
+        </header>
+
+        <!-- CONTENT -->
+        <div class="container" id="main-view">
+            <div class="hero-section">
+                <h1 class="hero-title">High-Performance<br>Digital Infrastructure.</h1>
+                <p class="hero-sub">We architect proprietary web engines, algorithmic SEO structures, and automated business systems for enterprise clients. No frameworks. No bloat. Pure titanium code.</p>
+            </div>
+
+            <!-- SOLUTIONS GRID -->
+            <div class="grid">
+                <!-- CARD 1 -->
+                <div class="card" onclick="openModal('KIT')">
+                    <div>
+                        <div class="card-label">SOFTWARE LICENSE</div>
+                        <h3>Titanium Protocol</h3>
+                        <p>The source code engine powering this platform. Enterprise-grade WebGL infrastructure, pre-optimized for speed and SEO.</p>
+                    </div>
+                    <div class="price">$497.00</div>
+                </div>
+
+                <!-- CARD 2 -->
+                <div class="card" onclick="openModal('SEO')">
+                    <div>
+                        <div class="card-label">GROWTH ARCHITECTURE</div>
+                        <h3>Algorithmic SEO</h3>
+                        <p>Advanced JSON-LD schema injection and metadata restructuring. We don't chase algorithms; we align with them.</p>
+                    </div>
+                    <div class="price">$2,500.00</div>
+                </div>
+
+                <!-- CARD 3 -->
+                <div class="card" onclick="openModal('CONSULT')">
+                    <div>
+                        <div class="card-label">EXECUTIVE CONSULTING</div>
+                        <h3>Apex Strategy</h3>
+                        <p>Complete business model reconstruction. Automation, AI integration, and high-ticket sales psychology.</p>
+                    </div>
+                    <div class="price">$5,000.00</div>
+                </div>
+
+                <!-- CARD 4 -->
+                <div class="card" onclick="openModal('NETWORK')">
+                    <div>
+                        <div class="card-label">MEMBERSHIP</div>
+                        <h3>Inner Circle</h3>
+                        <p>Private access to our development repository, weekly asset drops, and strategic networking.</p>
+                    </div>
+                    <div class="price">$97/mo</div>
+                </div>
+            </div>
         </div>
 
-        <div class="panel">
-            <h3>TITANIUM PACKAGER</h3>
-            <p>Bundles Source Code + Documentation + Business Templates.</p>
-            <button onclick="downloadPackage()">DOWNLOAD COMPLETE ZIP</button>
-            <div id="log" style="color:yellow; margin-top:10px;"></div>
+        <!-- FOOTER -->
+        <footer class="footer">
+            <div>&copy; 2025 NEURAL MATRIX VAULT</div>
+            <div>
+                <span>CONTACT: +1 (555) 019-2834</span> <!-- REPLACE WITH YOUR REAL NUMBER -->
+                <a href="mailto:theneuralvaultai@gmail.com">EMAIL</a>
+                <a href="legal.html">LEGAL</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- INNER CIRCLE PLATFORM (HIDDEN) -->
+    <div id="inner-circle-ui" style="display:none; position:relative; z-index:20;">
+        <header class="header">
+            <div class="brand">INNER CIRCLE // SECURE</div>
+            <button class="login-btn" onclick="location.reload()">LOGOUT</button>
+        </header>
+        <div class="container">
+            <h2 style="margin-bottom:30px;">Member Resources</h2>
+            <div class="feed-item">
+                <div class="feed-meta">PRIORITY UPDATE // TODAY</div>
+                <div class="feed-content">Titanium Protocol v2.1 Released. Includes new "Business Starter" templates and updated SEO schemas.</div>
+                <a href="#" class="primary-btn" style="width:auto; display:inline-block; margin-top:15px; padding:10px 20px;">DOWNLOAD UPDATE</a>
+            </div>
+            <div class="feed-item">
+                <div class="feed-meta">MARKET ANALYSIS</div>
+                <div class="feed-content">New report on AI-driven search intent available in the repository.</div>
+            </div>
         </div>
     </div>
 
+    <!-- LOGIN MODAL -->
+    <div id="login-overlay" class="modal-overlay">
+        <div class="modal-box" style="max-width:400px; text-align:center;">
+            <div class="close-btn" onclick="closeAll()">×</div>
+            <h3>CLIENT ACCESS</h3>
+            <p style="color:#666; margin-bottom:20px;">Enter your secure access key.</p>
+            <input type="password" id="member-pass" class="input-field" placeholder="ACCESS KEY">
+            <button class="primary-btn" onclick="verifyMember()">AUTHENTICATE</button>
+            <p id="login-msg" style="margin-top:15px; font-size:0.8rem; color:#ff4444;"></p>
+        </div>
+    </div>
+
+    <!-- PRODUCT MODAL -->
+    <div id="product-overlay" class="modal-overlay">
+        <div class="modal-box">
+            <div class="close-btn" onclick="closeAll()">×</div>
+            <div class="card-label" id="modal-label">CATEGORY</div>
+            <h2 id="modal-title" style="margin-bottom:20px;">TITLE</h2>
+            <p id="modal-desc" style="line-height:1.8; color:#ccc; margin-bottom:40px;"></p>
+            
+            <div style="border-top:1px solid var(--border-color); padding-top:20px;">
+                <div class="card-label">TECHNICAL SPECIFICATIONS</div>
+                <ul id="modal-tech" style="list-style:none; color:var(--text-secondary); line-height:2;"></ul>
+            </div>
+
+            <a href="#" id="modal-link" class="primary-btn" target="_blank">INITIATE ACQUISITION</a>
+        </div>
+    </div>
+
+    <script type="module" src="./src/app.js"></script>
     <script>
-        // HASH FOR: NEURAL_PRIME
-        const HASH = "fb57b29c20faf81d86757bda0839b5da8c0b76952a11edc6d1c9c6abebf5f9de";
+        // --- DATA ---
+        const PRODUCTS = {
+            'KIT': { title: 'Titanium Protocol', label: 'SOURCE CODE', desc: "This is the complete architectural blueprint of the Neural Matrix engine. It includes the optimized WebGL rendering core, the responsive UI framework, and the mobile-first interaction logic. Ideal for agencies and developers building high-performance digital assets.", tech: ["Vanilla ES6 Modules", "Three.js Integration", "GLSL Shaders", "Zero Dependencies"], link: 'https://buy.stripe.com/cNiaEX0KQ2Amcyz1aP8g008' },
+            'SEO': { title: 'Algorithmic SEO', label: 'SERVICE', desc: "We implement a mathematical approach to search visibility. By restructuring your site's data into JSON-LD schemas, we speak directly to search engine crawlers, forcing indexing and authority establishment.", tech: ["Schema.org/Organization", "Semantic HTML5", "Edge-Caching", "Lighthouse Optimization"], link: 'https://buy.stripe.com/14A9AT2SYgrcaqr06L8g009' },
+            'CONSULT': { title: 'Apex Strategy', label: 'CONSULTING', desc: "A comprehensive audit and reconstruction of your digital business model. We identify bottlenecks, automate workflows, and implement high-ticket sales psychology into your user experience.", tech: ["Workflow Automation", "Tech Stack Audit", "Conversion Rate Optimization", "AI Integration"], link: 'https://buy.stripe.com/3cI6oH1OUcaWcyz2eT8g00a' },
+            'NETWORK': { title: 'Inner Circle', label: 'MEMBERSHIP', desc: "Exclusive access to our private development network. Receive weekly code drops, proprietary assets, and direct market analysis before the public.", tech: ["Private Repository", "Weekly Assets", "Live Workshops", "Beta Access"], link: 'https://buy.stripe.com/6oU3cv5165My7ef6v98g00b' }
+        };
 
-        async function login() {
-            const p = document.getElementById('pass').value.trim();
-            const b = new TextEncoder().encode(p);
-            const h = await crypto.subtle.digest('SHA-256', b);
-            const hex = Array.from(new Uint8Array(h)).map(x=>x.toString(16).padStart(2,'0')).join('');
-            if(hex === HASH) {
-                document.getElementById('auth').style.display='none';
-                document.getElementById('dash').style.display='block';
-            } else { alert('DENIED'); }
+        // --- UI FUNCTIONS ---
+        function openModal(key) {
+            const p = PRODUCTS[key];
+            document.getElementById('modal-title').innerText = p.title;
+            document.getElementById('modal-label').innerText = p.label;
+            document.getElementById('modal-desc').innerText = p.desc;
+            const list = document.getElementById('modal-tech');
+            list.innerHTML = '';
+            p.tech.forEach(t => { const li = document.createElement('li'); li.innerText = "+ " + t; list.appendChild(li); });
+            document.getElementById('modal-link').href = p.link;
+            document.getElementById('product-overlay').style.display = 'flex';
         }
 
-        async function downloadPackage() {
-            const log = document.getElementById('log');
-            log.innerText = "PACKAGING ASSETS...";
-            const zip = new JSZip();
+        function closeAll() {
+            document.querySelectorAll('.modal-overlay').forEach(el => el.style.display = 'none');
+        }
 
-            // 1. FETCH LIVE FILES
-            zip.file("index.html", await fetch('index.html').then(r=>r.text()));
-            zip.file("style.css", await fetch('style.css').then(r=>r.text()));
-            zip.folder("src").file("app.js", await fetch('src/app.js').then(r=>r.text()));
-            zip.file("legal.html", await fetch('legal.html').then(r=>r.text()));
+        function openLogin() { document.getElementById('login-overlay').style.display = 'flex'; }
 
-            // 2. CREATE README
-            const readme = `
-TITANIUM PROTOCOL | USER MANUAL
-===============================
-Thank you for purchasing the Titanium Protocol.
+        // --- SECURITY ---
+        // HASH for 'NMV-ALPHA': 3879288a7c2656972236b2f6772740922659779352737603626260a927063238
+        const VALID_HASHES = [
+            "3879288a7c2656972236b2f6772740922659779352737603626260a927063238" 
+        ];
 
-QUICK START:
-1. Unzip this folder.
-2. Open 'index.html' in your browser to test.
-3. Edit 'index.html' to change text and links.
-4. Edit 'style.css' to change colors.
+        async function verifyMember() {
+            const input = document.getElementById('member-pass').value.trim().toUpperCase();
+            
+            // Generate Hash
+            const buffer = new TextEncoder().encode(input);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
-TEMPLATES:
-We have included a 'Business Starter' template in the /templates folder.
-Use this for corporate clients who need a clean, static landing page.
+            console.log("Input:", input); // DEBUG: Check console if it fails
+            console.log("Hash:", hashHex);
 
-SUPPORT:
-Email: theneuralvaultai@gmail.com
-            `;
-            zip.file("README.txt", readme);
-
-            // 3. CREATE TEMPLATES
-            const bizTemplate = `
-<html>
-<head><title>Business Template</title></head>
-<body style="background:#fff; color:#000; font-family:sans-serif; padding:50px;">
-    <h1>ENTERPRISE CORP</h1>
-    <p>Powered by Titanium Protocol.</p>
-</body>
-</html>`;
-            zip.folder("templates").file("business_starter.html", bizTemplate);
-
-            zip.generateAsync({type:"blob"}).then(c => {
-                saveAs(c, "Neural_Matrix_Titanium_Pack.zip");
-                log.innerText = "DOWNLOAD STARTED.";
-            });
+            if (VALID_HASHES.includes(hashHex)) {
+                closeAll();
+                document.getElementById('main-view').style.display = 'none';
+                document.getElementById('inner-circle-ui').style.display = 'block';
+            } else {
+                document.getElementById('login-msg').innerText = "INVALID ACCESS KEY";
+            }
         }
     </script>
 </body>
