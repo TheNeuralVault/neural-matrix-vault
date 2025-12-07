@@ -7,10 +7,10 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#050505">
     
-    <!-- PREMIUM FONTS -->
+    <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
     <!-- CSS -->
     <style>
@@ -18,8 +18,8 @@
             --void: #050505; 
             --neon: #00f3ff; 
             --neon-pink: #bc13fe;
-            --glass: rgba(10, 20, 30, 0.6); 
-            --glass-border: rgba(0, 243, 255, 0.2); 
+            --glass: rgba(10, 20, 30, 0.85); 
+            --glass-border: rgba(0, 243, 255, 0.3); 
         }
         * { margin:0; padding:0; box-sizing:border-box; }
 
@@ -31,18 +31,15 @@
             width: 100vw; height: 100dvh;
         }
 
-        /* CRT SCANLINE OVERLAY (TEXTURE) */
+        /* SCANLINES */
         body::after {
-            content: "";
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
-            background-size: 100% 4px;
-            z-index: 2; pointer-events: none;
+            background-size: 100% 4px; z-index: 2; pointer-events: none;
         }
 
         #neural-canvas { position: absolute; top:0; left:0; width:100%; height:100%; z-index:1; }
 
-        /* UI LAYERS */
         .layer { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             z-index: 10; display: flex; flex-direction: column; 
@@ -50,71 +47,83 @@
         }
         .active-layer { pointer-events: auto; }
 
-        /* LANDING */
+        /* HERO SECTION */
         #landing-layer { justify-content: center; align-items: center; text-align: center; }
         .hero-text { 
-            font-size: clamp(3rem, 8vw, 6rem); 
-            line-height: 0.9; margin-bottom: 30px; 
+            font-size: clamp(3rem, 8vw, 6rem); line-height: 0.9; margin-bottom: 20px; 
             text-transform: uppercase; font-weight: 700;
-            text-shadow: 0 0 30px rgba(0,243,255,0.6);
-            letter-spacing: 2px;
+            text-shadow: 0 0 30px rgba(0,243,255,0.6); letter-spacing: 2px;
         }
-        .sub-hero {
-            font-size: 1rem; color: #aaa; letter-spacing: 4px; margin-bottom: 40px; text-transform: uppercase;
+        
+        /* THE HACK CHALLENGE BADGE */
+        .security-badge {
+            font-family: 'Share Tech Mono', monospace;
+            border: 1px solid var(--neon); color: var(--neon);
+            padding: 8px 15px; font-size: 0.8rem; cursor: pointer;
+            display: inline-block; margin-bottom: 30px;
+            background: rgba(0, 243, 255, 0.05);
+            transition: 0.3s;
         }
+        .security-badge:hover { background: var(--neon); color: #000; box-shadow: 0 0 20px var(--neon); }
 
         .cyber-button { 
-            background: rgba(0, 243, 255, 0.1); 
-            border: 1px solid var(--neon); 
-            color: var(--neon); 
-            padding: 15px 50px; 
-            font-size: 1.2rem; 
-            letter-spacing: 3px; 
-            cursor: pointer; 
-            font-family: 'Rajdhani', sans-serif; 
-            font-weight: 700; text-transform: uppercase; 
-            transition: 0.3s; 
-            box-shadow: 0 0 20px rgba(0,243,255,0.1);
+            background: rgba(0, 243, 255, 0.1); border: 1px solid var(--neon); 
+            color: var(--neon); padding: 15px 50px; font-size: 1.2rem; 
+            letter-spacing: 3px; cursor: pointer; font-family: 'Rajdhani', sans-serif; 
+            font-weight: 700; text-transform: uppercase; transition: 0.3s; 
             backdrop-filter: blur(5px);
         }
-        .cyber-button:hover { 
-            background: var(--neon); color: #000; box-shadow: 0 0 50px var(--neon);
-        }
+        .cyber-button:hover { background: var(--neon); color: #000; box-shadow: 0 0 50px var(--neon); }
 
-        /* DASHBOARD GRID */
-        #dashboard-layer { 
-            display: none; padding: 20px; overflow-y: auto; 
-            background: rgba(0,0,0,0.7); backdrop-filter: blur(15px); 
+        /* DASHBOARD */
+        #dashboard-layer { display: none; padding: 20px; overflow-y: auto; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); }
+        .dash-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid var(--glass-border); margin-bottom: 30px; }
+        
+        .mic-toggle {
+            font-family: 'Share Tech Mono', monospace; color: #aaa; cursor: pointer; border: 1px solid #333; padding: 5px 10px; font-size: 0.8rem; transition: 0.3s;
         }
-        .dash-title { text-align: center; font-size: 2rem; margin: 30px 0; letter-spacing: 5px; color: var(--neon); }
+        .mic-toggle.active { color: var(--neon-pink); border-color: var(--neon-pink); text-shadow: 0 0 10px var(--neon-pink); }
 
-        .grid-container { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-            gap: 25px; max-width: 1200px; margin: 0 auto 80px auto; 
-        }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto 80px auto; }
 
         .card { 
             background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
-            border: 1px solid var(--glass-border); 
-            padding: 30px; 
-            transition: 0.3s; cursor: pointer; 
-            position: relative; overflow: hidden;
-        }
-        .card::before {
-            content: ""; position: absolute; top:0; left:0; width: 4px; height: 100%; background: var(--neon); opacity: 0; transition: 0.3s;
+            border: 1px solid var(--glass-border); padding: 30px; 
+            transition: 0.3s; cursor: pointer; position: relative; overflow: hidden;
         }
         .card:hover { transform: translateY(-5px); border-color: var(--neon); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-        .card:hover::before { opacity: 1; }
+        .card h3 { font-size: 1.5rem; margin-bottom: 10px; text-transform: uppercase; color: #fff; }
+        .card p { color: #bbb; font-size: 1rem; margin-bottom: 20px; }
+        .card-price { font-size: 1.2rem; color: var(--neon-pink); font-weight: 700; }
 
-        .card h3 { font-size: 1.5rem; margin-bottom: 10px; text-transform: uppercase; }
-        .card p { color: #bbb; font-size: 1rem; line-height: 1.4; margin-bottom: 20px; }
-        .card-price { font-size: 1.2rem; color: var(--neon-pink); font-weight: 700; letter-spacing: 1px; }
+        /* THE PRODUCT MODAL (THE BRIEFING ROOM) */
+        #modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 100;
+            display: none; justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background: #050505; border: 1px solid var(--neon); width: 95%; max-width: 800px; padding: 40px;
+            position: relative; box-shadow: 0 0 50px rgba(0,243,255,0.1); max-height: 90vh; overflow-y: auto;
+        }
+        .modal-close { position: absolute; top: 20px; right: 20px; font-size: 2rem; color: #555; cursor: pointer; }
+        .modal-close:hover { color: var(--neon); }
 
-        /* LOADING */
-        #loader { position:absolute; z-index:999; width:100%; height:100%; background:#000; display:flex; flex-direction: column; justify-content:center; align-items:center; }
-        .loader-bar { width:200px; height:4px; background:var(--neon); animation:load 1.5s infinite; box-shadow: 0 0 20px var(--neon); }
-        .loader-text { margin-top: 15px; letter-spacing: 5px; font-size: 0.8rem; color: var(--neon); }
+        .split-view { display: flex; flex-wrap: wrap; gap: 40px; margin: 30px 0; }
+        .split-col { flex: 1; min-width: 300px; }
+        .split-col h4 { color: var(--neon-pink); margin-bottom: 15px; font-family: 'Share Tech Mono', monospace; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        .split-col p { color: #ccc; line-height: 1.6; font-size: 1rem; }
+        .tech-list li { color: var(--neon); font-family: 'Share Tech Mono', monospace; margin-bottom: 5px; font-size: 0.9rem; }
+
+        .modal-action { display: block; width: 100%; text-align: center; background: var(--neon); color: #000; padding: 20px; font-weight: bold; font-size: 1.2rem; text-decoration: none; text-transform: uppercase; transition: 0.3s; margin-top: 20px; }
+        .modal-action:hover { background: #fff; box-shadow: 0 0 40px var(--neon); }
+
+        /* HACK CHALLENGE MODAL */
+        #hack-modal { display: none; }
+        .terminal-text { color: #0f0; font-family: 'Share Tech Mono', monospace; font-size: 0.9rem; margin-bottom: 20px; }
+
+        #loader { position:absolute; z-index:999; width:100%; height:100%; background:#000; display:flex; justify-content:center; align-items:center; }
+        .loader-bar { width:200px; height:4px; background:var(--neon); animation:load 1.5s infinite; }
         @keyframes load { 0%{transform:scaleX(0);} 50%{transform:scaleX(1);} 100%{transform:scaleX(0);} }
     </style>
 
@@ -123,49 +132,156 @@
 <body>
     <div id="app">
         <canvas id="neural-canvas"></canvas>
-        <div id="loader">
-            <div class="loader-bar"></div>
-            <div class="loader-text">INITIALIZING CORE</div>
-        </div>
+        <div id="loader"><div class="loader-bar"></div></div>
 
         <!-- LANDING -->
         <div id="landing-layer" class="layer active-layer">
             <div style="z-index: 5;">
                 <h1 class="hero-text">NEURAL<br><span style="color:var(--neon)">MATRIX</span></h1>
-                <div class="sub-hero">THE SINGULARITY IS NOW</div>
+                
+                <!-- THE CHALLENGE -->
+                <div class="security-badge" onclick="openHackChallenge()">
+                    🔒 SECURITY: MILITARY-GRADE. CLICK TO VERIFY.
+                </div>
+                <br>
                 <button id="init-btn" class="cyber-button">ENTER SYSTEM</button>
             </div>
         </div>
 
         <!-- DASHBOARD -->
         <div id="dashboard-layer" class="layer">
-            <h2 class="dash-title">ARTIFACTS</h2>
+            <div class="dash-header">
+                <div style="font-size:1.5rem; font-weight:bold; color:var(--neon);">:: ARMORY</div>
+                <div id="mic-trigger" class="mic-toggle">[ CONNECT NEURAL LINK ]</div>
+            </div>
+
             <div class="grid-container">
-                <article class="card" onclick="window.open('https://buy.stripe.com/cNiaEX0KQ2Amcyz1aP8g008')">
+                <!-- PRODUCT 1 -->
+                <article class="card" onclick="openModal('KIT')">
                     <h3>TITANIUM PROTOCOL</h3>
-                    <p>The Source Code. Own the engine.</p>
+                    <p>The Source Code. The Engine. The Standard.</p>
                     <div class="card-price">$497.00</div>
                 </article>
-                <article class="card" onclick="window.open('https://buy.stripe.com/14A9AT2SYgrcaqr06L8g009')">
+                <!-- PRODUCT 2 -->
+                <article class="card" onclick="openModal('SEO')">
                     <h3>SEO DOMINANCE</h3>
-                    <p>Rank #1. JSON-LD Injection.</p>
+                    <p>Force Google to rank you #1.</p>
                     <div class="card-price">$2,500.00</div>
                 </article>
-                <article class="card" onclick="window.open('https://buy.stripe.com/3cI6oH1OUcaWcyz2eT8g00a')">
+                <!-- PRODUCT 3 -->
+                <article class="card" onclick="openModal('CONSULT')">
                     <h3>APEX STRATEGY</h3>
-                    <p>1-on-1 Consultation.</p>
+                    <p>Me. You. Total World Domination.</p>
                     <div class="card-price">$5,000.00</div>
                 </article>
-                <article class="card" onclick="window.open('https://buy.stripe.com/6oU3cv5165My7ef6v98g00b')">
+                <!-- PRODUCT 4 -->
+                <article class="card" onclick="openModal('NETWORK')">
                     <h3>INNER CIRCLE</h3>
-                    <p>Private Membership.</p>
+                    <p>The Private Network.</p>
                     <div class="card-price">$97/mo</div>
                 </article>
             </div>
-            <!-- Hidden Admin -->
+            
+            <!-- ADMIN HIDDEN -->
             <div style="position:fixed; bottom:0; right:0; width:50px; height:50px;" onclick="location.href='console_x1.html'"></div>
         </div>
+
+        <!-- BRIEFING ROOM MODAL -->
+        <div id="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-close" onclick="closeModal()">×</div>
+                <h2 id="modal-title" style="font-size: 2.5rem; color: #fff; margin-bottom: 10px;">TITLE</h2>
+                
+                <div class="split-view">
+                    <!-- PLAIN ENGLISH -->
+                    <div class="split-col">
+                        <h4>STRATEGIC VALUE</h4>
+                        <p id="modal-strategy">Description goes here.</p>
+                    </div>
+                    <!-- TECHNICAL -->
+                    <div class="split-col">
+                        <h4>TECHNICAL SPECS</h4>
+                        <ul id="modal-tech" class="tech-list"></ul>
+                    </div>
+                </div>
+
+                <a href="#" id="modal-link" target="_blank" class="modal-action">ACQUIRE ASSET</a>
+            </div>
+        </div>
+
+        <!-- HACK CHALLENGE MODAL -->
+        <div id="hack-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:200;display:none;justify-content:center;align-items:center;">
+            <div style="max-width:600px; padding:30px; border:1px solid #0f0; background:#050505;">
+                <h2 style="color:#0f0; margin-bottom:20px;">:: SYSTEM INTEGRITY CHALLENGE ::</h2>
+                <p class="terminal-text">
+                    > SCANNING FOR VULNERABILITIES... 0 FOUND.<br>
+                    > ENCRYPTION: SHA-256 CLIENT-SIDE HASHING.<br>
+                    > SERVER STATUS: SERVERLESS (UNHACKABLE).<br>
+                    <br>
+                    We do not use standard login forms. We use cryptographic math. 
+                    If you can reverse engineer the SHA-256 hash in our 'console_x1.html' file, 
+                    we will give you the Titanium Protocol for free.
+                    <br><br>
+                    Good luck. You will need it.
+                </p>
+                <button class="cyber-button" style="border-color:#0f0; color:#0f0; background:transparent;" onclick="document.getElementById('hack-modal').style.display='none'">CLOSE TERMINAL</button>
+            </div>
+        </div>
+
     </div>
     <script type="module" src="./src/app.js"></script>
+
+    <!-- UI LOGIC -->
+    <script>
+        const PRODUCTS = {
+            'KIT': {
+                title: 'TITANIUM PROTOCOL',
+                strategy: "You are not buying code; you are buying time. This is the exact engine running this website. It is pre-optimized, SEO-hardened, and ready to deploy. Stop building from scratch. Start at the finish line.",
+                tech: ["Three.js WebGL Renderer", "GLSL Custom Shaders", "Mobile-First Responsive", "No External Frameworks"],
+                link: 'https://buy.stripe.com/cNiaEX0KQ2Amcyz1aP8g008'
+            },
+            'SEO': {
+                title: 'SEO DOMINANCE',
+                strategy: "Google is a robot. We speak its language. We don't write 'blogs'; we inject raw data structures (JSON-LD) that force search engines to index you as an authority.",
+                tech: ["Schema.org Implementation", "Canonical URL Strategy", "Lighthouse Score > 95", "Meta-Tag Injection"],
+                link: 'https://buy.stripe.com/14A9AT2SYgrcaqr06L8g009'
+            },
+            'CONSULT': {
+                title: 'APEX STRATEGY',
+                strategy: "A 1-on-1 architecture session. We tear down your current business model and rebuild it using automation, AI, and high-ticket psychology.",
+                tech: ["3-Hour Deep Dive", "Tech Stack Audit", "Automation Blueprint", "30-Day Support"],
+                link: 'https://buy.stripe.com/3cI6oH1OUcaWcyz2eT8g00a'
+            },
+            'NETWORK': {
+                title: 'INNER CIRCLE',
+                strategy: "Your network is your net worth. Join the private channel where we drop new code, new assets, and new strategies every week.",
+                tech: ["Discord Private Access", "Weekly Code Drops", "Live Reviews", "Beta Features"],
+                link: 'https://buy.stripe.com/6oU3cv5165My7ef6v98g00b'
+            }
+        };
+
+        window.openModal = function(key) {
+            const item = PRODUCTS[key];
+            document.getElementById('modal-title').innerText = item.title;
+            document.getElementById('modal-strategy').innerText = item.strategy;
+            
+            const list = document.getElementById('modal-tech');
+            list.innerHTML = '';
+            item.tech.forEach(t => {
+                const li = document.createElement('li'); li.innerText = ">> " + t; list.appendChild(li);
+            });
+
+            document.getElementById('modal-link').href = item.link;
+            document.getElementById('modal-overlay').style.display = 'flex';
+        };
+
+        window.closeModal = function() {
+            document.getElementById('modal-overlay').style.display = 'none';
+        };
+
+        window.openHackChallenge = function() {
+            document.getElementById('hack-modal').style.display = 'flex';
+        }
+    </script>
 </body>
 </html>
