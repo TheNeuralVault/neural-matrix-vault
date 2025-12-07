@@ -36,17 +36,29 @@
         </div>
     </div>
     <script>
-        const TARGET_HASH = "fb57b29c20faf81d86757bda0839b5da8c0b76952a11edc6d1c9c6abebf5f9de";{
+        // Correct Hash for 'NEURAL_PRIME'
+        const TARGET_HASH = "fb57b29c20faf81d86757bda0839b5da8c0b76952a11edc6d1c9c6abebf5f9de";
+        
+        async function sha256(m) {
             const b = new TextEncoder().encode(m);
             const h = await crypto.subtle.digest('SHA-256', b);
             return Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2,'0')).join('');
         }
         async function verifyIdentity() {
-            const i = document.getElementById('admin-pass').value;
-            if (await sha256(i) === TARGET_HASH) {
+            // .trim() removes the invisible mobile spacebar error
+            const i = document.getElementById('admin-pass').value.trim();
+            const h = await sha256(i);
+            
+            // Debugging (Remove this in final production if you want absolute stealth, keeps it for now so you see what's happening)
+            console.log("Input:", i); 
+            console.log("Generated Hash:", h);
+
+            if (h === TARGET_HASH) {
                 document.getElementById('auth-gate').style.display = 'none';
                 document.getElementById('admin-interface').style.display = 'block';
-            } else { document.getElementById('status').innerText = "ACCESS DENIED."; }
+            } else { 
+                document.getElementById('status').innerText = "ACCESS DENIED."; 
+            }
         }
         function show(id) { document.querySelectorAll('.panel').forEach(p=>p.style.display='none'); document.getElementById('p-'+id).style.display='block'; }
         function genSEO() {
