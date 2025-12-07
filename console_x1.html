@@ -3,127 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TERMINAL | COMMAND</title>
-    <!-- JSZip for Bundling Source Code -->
+    <title>COMMAND | NEURAL ADMIN</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    
     <style>
-        body { background: #000; color: #0f0; font-family: 'Courier New', monospace; padding: 20px; }
-        h1, h2 { border-bottom: 1px solid #0f0; padding-bottom: 10px; }
-        input, textarea { width: 100%; background: #111; border: 1px solid #0f0; color: #fff; padding: 10px; margin-bottom: 10px; }
-        button { background: #0f0; color: #000; padding: 10px 20px; border: none; font-weight: bold; cursor: pointer; margin-right: 10px; margin-bottom: 10px; }
-        .panel { display: none; margin-top: 20px; border: 1px solid #333; padding: 20px; }
-        .status-log { color: yellow; font-size: 12px; margin-top: 10px; }
+        body { background: #111; color: #fff; font-family: sans-serif; padding: 20px; }
+        input { padding: 10px; width: 100%; margin-bottom: 10px; background: #222; border: 1px solid #444; color: #fff; }
+        button { padding: 10px 20px; background: #fff; color: #000; border: none; font-weight: bold; cursor: pointer; }
+        .panel { border: 1px solid #333; padding: 20px; margin-top: 20px; }
     </style>
 </head>
 <body>
-
-    <div id="auth-gate">
-        <h1 style="color:red">:: QUANTUM ENCRYPTION WALL ::</h1>
-        <p>IDENTIFY YOURSELF.</p>
-        <input type="password" id="admin-pass" placeholder="ENTER ACCESS KEY">
-        <button onclick="verifyIdentity()">INITIATE HANDSHAKE</button>
-        <p id="auth-status"></p>
+    <h1>ADMIN CONSOLE</h1>
+    
+    <div id="auth">
+        <input type="password" id="pass" placeholder="MASTER KEY">
+        <button onclick="login()">LOGIN</button>
     </div>
 
-    <div id="admin-interface" style="display:none;">
-        <h1>:: COMMAND CONSOLE ::</h1>
-        <button onclick="show('seo')">SEO ENGINE</button>
-        <button onclick="show('delivery')">TITANIUM DELIVERY</button>
-        <button onclick="show('circle')">INNER CIRCLE OPS</button>
-
-        <!-- SEO TOOL -->
-        <div id="p-seo" class="panel">
-            <h2>SEO GENERATOR</h2>
-            <input id="d" placeholder="Domain (e.g. client.com)">
-            <input id="n" placeholder="Business Name">
-            <input id="de" placeholder="Description">
-            <button onclick="genSEO()">GENERATE CODE</button>
-            <textarea id="out" style="height:100px;"></textarea>
+    <div id="dash" style="display:none;">
+        <div class="panel">
+            <h3>KEY FORGE</h3>
+            <p>Generate Client Access Keys</p>
+            <button onclick="alert('Use Chrome Console to generate SHA-256 for now.')">OPEN TOOLS</button>
         </div>
 
-        <!-- DELIVERY TOOL -->
-        <div id="p-delivery" class="panel">
-            <h2>TITANIUM SOURCE COMPILER</h2>
-            <p>Compiles index.html, style.css, app.js, and manifest into a ZIP file.</p>
-            <button onclick="compileAndDownload()">GENERATE .ZIP PACKAGE</button>
-            <div id="zip-log" class="status-log"></div>
-        </div>
-
-        <!-- INNER CIRCLE OPS -->
-        <div id="p-circle" class="panel">
-            <h2>MEMBER MANAGEMENT</h2>
-            <p>Member Password: <strong>NEURAL_MEMBER</strong></p>
-            <textarea placeholder="Post Update to Inner Circle Feed..."></textarea>
-            <button>POST UPDATE (Simulated)</button>
+        <div class="panel">
+            <h3>TITANIUM PACKAGER</h3>
+            <p>Bundles Source Code + Documentation + Business Templates.</p>
+            <button onclick="downloadPackage()">DOWNLOAD COMPLETE ZIP</button>
+            <div id="log" style="color:yellow; margin-top:10px;"></div>
         </div>
     </div>
 
     <script>
-        const TARGET_HASH = "fb57b29c20faf81d86757bda0839b5da8c0b76952a11edc6d1c9c6abebf5f9de"; // NEURAL_PRIME
+        // HASH FOR: NEURAL_PRIME
+        const HASH = "fb57b29c20faf81d86757bda0839b5da8c0b76952a11edc6d1c9c6abebf5f9de";
 
-        async function sha256(m) {
-            const b = new TextEncoder().encode(m);
+        async function login() {
+            const p = document.getElementById('pass').value.trim();
+            const b = new TextEncoder().encode(p);
             const h = await crypto.subtle.digest('SHA-256', b);
-            return Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2,'0')).join('');
+            const hex = Array.from(new Uint8Array(h)).map(x=>x.toString(16).padStart(2,'0')).join('');
+            if(hex === HASH) {
+                document.getElementById('auth').style.display='none';
+                document.getElementById('dash').style.display='block';
+            } else { alert('DENIED'); }
         }
 
-        async function verifyIdentity() {
-            const i = document.getElementById('admin-pass').value.trim();
-            if (await sha256(i) === TARGET_HASH) {
-                document.getElementById('auth-gate').style.display = 'none';
-                document.getElementById('admin-interface').style.display = 'block';
-            } else { 
-                document.getElementById('auth-status').innerText = "ACCESS DENIED."; 
-            }
-        }
-
-        function show(id) { document.querySelectorAll('.panel').forEach(p=>p.style.display='none'); document.getElementById('p-'+id).style.display='block'; }
-
-        function genSEO() {
-            const d=document.getElementById('d').value, n=document.getElementById('n').value, de=document.getElementById('de').value;
-            document.getElementById('out').value = `<title>${n}</title><meta name="description" content="${de}">\n<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"${n}","url":"https://${d}"}<\/script>`;
-        }
-
-        // --- TITANIUM COMPILER ---
-        async function compileAndDownload() {
-            const log = document.getElementById('zip-log');
-            log.innerText = "INITIALIZING COMPILER...";
-            
+        async function downloadPackage() {
+            const log = document.getElementById('log');
+            log.innerText = "PACKAGING ASSETS...";
             const zip = new JSZip();
-            
-            try {
-                log.innerText = "FETCHING INDEX...";
-                const index = await fetch('index.html').then(r => r.text());
-                zip.file("index.html", index);
 
-                log.innerText = "FETCHING STYLE...";
-                const style = await fetch('style.css').then(r => r.text());
-                zip.file("style.css", style);
+            // 1. FETCH LIVE FILES
+            zip.file("index.html", await fetch('index.html').then(r=>r.text()));
+            zip.file("style.css", await fetch('style.css').then(r=>r.text()));
+            zip.folder("src").file("app.js", await fetch('src/app.js').then(r=>r.text()));
+            zip.file("legal.html", await fetch('legal.html').then(r=>r.text()));
 
-                log.innerText = "FETCHING BRAIN...";
-                const app = await fetch('src/app.js').then(r => r.text());
-                zip.folder("src").file("app.js", app);
+            // 2. CREATE README
+            const readme = `
+TITANIUM PROTOCOL | USER MANUAL
+===============================
+Thank you for purchasing the Titanium Protocol.
 
-                log.innerText = "FETCHING MANIFEST...";
-                const man = await fetch('manifest.json').then(r => r.text());
-                zip.file("manifest.json", man);
+QUICK START:
+1. Unzip this folder.
+2. Open 'index.html' in your browser to test.
+3. Edit 'index.html' to change text and links.
+4. Edit 'style.css' to change colors.
 
-                log.innerText = "FETCHING LEGAL...";
-                const leg = await fetch('legal.html').then(r => r.text());
-                zip.file("legal.html", leg);
+TEMPLATES:
+We have included a 'Business Starter' template in the /templates folder.
+Use this for corporate clients who need a clean, static landing page.
 
-                log.innerText = "COMPRESSING...";
-                zip.generateAsync({type:"blob"}).then(function(content) {
-                    saveAs(content, "Titanium_Protocol_Source.zip");
-                    log.innerText = "DOWNLOAD COMPLETE.";
-                });
+SUPPORT:
+Email: theneuralvaultai@gmail.com
+            `;
+            zip.file("README.txt", readme);
 
-            } catch (err) {
-                log.innerText = "ERROR: " + err.message;
-                console.error(err);
-            }
+            // 3. CREATE TEMPLATES
+            const bizTemplate = `
+<html>
+<head><title>Business Template</title></head>
+<body style="background:#fff; color:#000; font-family:sans-serif; padding:50px;">
+    <h1>ENTERPRISE CORP</h1>
+    <p>Powered by Titanium Protocol.</p>
+</body>
+</html>`;
+            zip.folder("templates").file("business_starter.html", bizTemplate);
+
+            zip.generateAsync({type:"blob"}).then(c => {
+                saveAs(c, "Neural_Matrix_Titanium_Pack.zip");
+                log.innerText = "DOWNLOAD STARTED.";
+            });
         }
     </script>
 </body>
