@@ -3,379 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Neural Matrix Vault | The Singularity</title>
+    <title>Neural Matrix Vault | Enterprise Digital Architecture</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#000000">
+    <meta name="theme-color" content="#050505">
     
-    <!-- FONTS -->
+    <!-- PROFESSIONAL FONT: INTER -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
-    <style>
-        :root { 
-            --void: #000000; 
-            --neon-blue: #00f3ff; 
-            --neon-purple: #bc13fe; 
-            --neon-gold: #ffd700;
-            --glass-bg: rgba(10, 10, 10, 0.7); 
-            --glass-border: rgba(255, 255, 255, 0.1); 
-        }
-        
-        * { margin:0; padding:0; box-sizing:border-box; }
-        
-        body { 
-            background: var(--void); 
-            color: #fff; 
-            font-family: 'Rajdhani', sans-serif; 
-            overflow: hidden; 
-            width: 100vw; height: 100dvh;
-        }
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- ANALYTICS -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P1PCVNCCE4"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-P1PCVNCCE4');
+    </script>
 
-        /* 3D CANVAS */
-        #neural-canvas { position: absolute; top:0; left:0; width:100%; height:100%; z-index:1; }
-
-        /* UI LAYER */
-        #ui-layer {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10;
-            display: flex; flex-direction: column;
-            overflow-y: auto;
-            background: radial-gradient(circle at center, transparent 0%, #000000 120%);
-        }
-
-        /* HEADER */
-        .hud-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 20px 5%;
-            border-bottom: 1px solid var(--glass-border);
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(10px);
-            position: sticky; top: 0; z-index: 50;
-        }
-
-        .brand {
-            font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 1.2rem;
-            color: #fff; letter-spacing: 2px;
-            text-shadow: 0 0 15px var(--neon-blue);
-        }
-
-        /* INNER CIRCLE BUTTON */
-        .inner-circle-btn {
-            background: rgba(188, 19, 254, 0.1);
-            border: 1px solid var(--neon-purple);
-            color: var(--neon-purple);
-            padding: 8px 15px;
-            font-family: 'Orbitron', sans-serif; font-size: 0.7rem; letter-spacing: 1px;
-            cursor: pointer; transition: 0.3s;
-            box-shadow: 0 0 15px rgba(188, 19, 254, 0.2);
-            animation: pulse-purple 2s infinite;
-        }
-        .inner-circle-btn:hover { background: var(--neon-purple); color: #000; box-shadow: 0 0 40px var(--neon-purple); }
-
-        /* MAIN CONTENT */
-        .main-content { flex-grow: 1; padding: 40px 5%; max-width: 1400px; margin: 0 auto; width: 100%; }
-
-        /* HERO */
-        .hero-title {
-            font-family: 'Orbitron', sans-serif; font-size: clamp(2rem, 5vw, 4rem);
-            line-height: 1; margin-bottom: 15px;
-            background: linear-gradient(to right, #fff, var(--neon-blue));
-            -webkit-background-clip: text; color: transparent;
-        }
-        
-        .security-badge {
-            display: inline-block;
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 0.7rem; color: var(--neon-blue); letter-spacing: 2px;
-            border: 1px solid var(--neon-blue); padding: 8px 12px;
-            margin-bottom: 40px; background: rgba(0, 243, 255, 0.05);
-            cursor: pointer; transition: 0.3s;
-        }
-        .security-badge:hover { background: var(--neon-blue); color: #000; }
-
-        /* PRODUCT GRID */
-        .armory-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-
-        .card {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            padding: 30px;
-            backdrop-filter: blur(10px);
-            transition: 0.3s; cursor: pointer;
-            position: relative; overflow: hidden;
-        }
-        .card::after {
-            content: ""; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px;
-            background: var(--neon-blue); transform: scaleX(0); transition: 0.3s; transform-origin: left;
-        }
-        .card:hover { transform: translateY(-5px); border-color: #fff; }
-        .card:hover::after { transform: scaleX(1); }
-
-        .card h3 { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; margin-bottom: 10px; color: #fff; }
-        .card p { color: #aaa; font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px; }
-        .price { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; color: var(--neon-gold); }
-
-        /* THE BRIEFING MODAL */
-        #modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.98); z-index: 100;
-            display: none; justify-content: center; align-items: center;
-            opacity: 0; transition: opacity 0.3s ease;
-        }
-        .modal-content {
-            background: #050505; border: 1px solid var(--neon-blue);
-            width: 95%; max-width: 900px; padding: 40px;
-            position: relative; box-shadow: 0 0 50px rgba(0,243,255,0.1);
-            max-height: 90vh; overflow-y: auto;
-        }
-        .modal-close { position: absolute; top: 20px; right: 20px; font-size: 2rem; color: #555; cursor: pointer; }
-        .modal-close:hover { color: #fff; }
-
-        .split-view { display: flex; flex-wrap: wrap; gap: 40px; margin: 30px 0; border-top: 1px solid #333; padding-top: 30px; }
-        .split-col { flex: 1; min-width: 300px; }
-        
-        .col-header { 
-            color: var(--neon-purple); font-family: 'Orbitron', sans-serif; font-size: 1rem; 
-            margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; 
-        }
-        .strategy-text { color: #ccc; line-height: 1.8; font-size: 1rem; }
-        .tech-list { list-style: none; padding: 0; }
-        .tech-list li { 
-            color: var(--neon-blue); font-family: 'Share Tech Mono', monospace; 
-            margin-bottom: 8px; font-size: 0.9rem; border-bottom: 1px dashed #333; padding-bottom: 5px;
-        }
-        .tech-list li::before { content: ">> "; color: #555; }
-
-        .modal-action {
-            display: block; width: 100%; text-align: center;
-            background: var(--neon-blue); color: #000; padding: 20px;
-            font-family: 'Orbitron', sans-serif; font-weight: bold; font-size: 1.2rem;
-            text-decoration: none; text-transform: uppercase; transition: 0.3s; margin-top: 20px;
-        }
-        .modal-action:hover { background: #fff; box-shadow: 0 0 40px var(--neon-blue); }
-
-        /* LOGIN & HACK MODALS */
-        #login-overlay, #hack-modal { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.95); z-index: 200; display: none; 
-            justify-content: center; align-items: center; 
-        }
-        .login-box { 
-            background: #000; border: 1px solid var(--neon-purple); padding: 40px; 
-            width: 90%; max-width: 400px; text-align: center; box-shadow: 0 0 50px rgba(188, 19, 254, 0.2); 
-        }
-        .cyber-input { 
-            width: 100%; background: #111; border: 1px solid #333; padding: 15px; 
-            color: #fff; font-family: 'Orbitron', sans-serif; margin: 20px 0; outline: none; 
-        }
-
-        /* INNER CIRCLE FEED */
-        #inner-circle-ui {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 200; padding: 20px; overflow-y: auto;
-        }
-        .feed-container { max-width: 800px; margin: 50px auto; border-left: 2px solid var(--neon-purple); padding-left: 20px; }
-        .feed-item { margin-bottom: 30px; }
-        .feed-user { color: var(--neon-purple); font-weight: bold; font-family: 'Orbitron', sans-serif; }
-        .feed-msg { color: #ddd; margin-top: 5px; font-size: 1rem; }
-
-        @keyframes pulse-purple { 0% { box-shadow: 0 0 10px rgba(188,19,254,0.2); } 50% { box-shadow: 0 0 20px rgba(188,19,254,0.6); } 100% { box-shadow: 0 0 10px rgba(188,19,254,0.2); } }
-    </style>
     <script type="importmap"> { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } } </script>
 </head>
 <body>
 
-    <!-- 3D ENGINE -->
+    <!-- 3D ENGINE (SUBTLE BACKGROUND) -->
     <canvas id="neural-canvas"></canvas>
+    
+    <!-- LOADER -->
+    <div id="loader"><div style="color:#fff; font-size:0.8rem; letter-spacing:2px;">INITIALIZING PROTOCOLS...</div></div>
 
     <!-- MAIN UI -->
     <div id="ui-layer">
         
         <!-- HEADER -->
-        <header class="hud-header">
-            <div class="brand">NEURAL<span style="color:var(--neon-blue)">VAULT</span></div>
-            <button class="inner-circle-btn" onclick="openLogin()">INNER CIRCLE LOGIN</button>
+        <header class="header">
+            <div class="brand">NEURAL MATRIX VAULT</div>
+            <button class="login-btn" onclick="openLogin()">CLIENT PORTAL</button>
         </header>
 
         <!-- CONTENT -->
-        <main class="main-content">
-            <div style="margin-bottom: 60px;">
-                <h1 class="hero-title">ARCHITECTING THE<br>IMPOSSIBLE</h1>
-                <div class="security-badge" onclick="document.getElementById('hack-modal').style.display='flex'">
-                    🔒 SECURITY: MATHEMATICALLY IMPOSSIBLE TO BREACH
-                </div>
+        <div class="container" id="main-view">
+            <div class="hero-section">
+                <h1 class="hero-title">High-Performance<br>Digital Infrastructure.</h1>
+                <p class="hero-sub">We architect proprietary web engines, algorithmic SEO structures, and automated business systems for enterprise clients. No frameworks. No bloat. Pure titanium code.</p>
             </div>
 
-            <!-- ARMORY -->
-            <div class="armory-grid">
+            <!-- SOLUTIONS GRID -->
+            <div class="grid">
+                <!-- CARD 1 -->
                 <div class="card" onclick="openModal('KIT')">
-                    <h3 style="color:var(--neon-blue)">TITANIUM PROTOCOL</h3>
-                    <p>The Source Code Engine. Pre-optimized WebGL infrastructure.</p>
+                    <div>
+                        <div class="card-label">SOFTWARE LICENSE</div>
+                        <h3>Titanium Protocol</h3>
+                        <p>The source code engine powering this platform. Enterprise-grade WebGL infrastructure, pre-optimized for speed and SEO.</p>
+                    </div>
                     <div class="price">$497.00</div>
                 </div>
+
+                <!-- CARD 2 -->
                 <div class="card" onclick="openModal('SEO')">
-                    <h3 style="color:var(--neon-blue)">SEO DOMINANCE</h3>
-                    <p>JSON-LD Injection. Force Google Authority.</p>
+                    <div>
+                        <div class="card-label">GROWTH ARCHITECTURE</div>
+                        <h3>Algorithmic SEO</h3>
+                        <p>Advanced JSON-LD schema injection and metadata restructuring. We don't chase algorithms; we align with them.</p>
+                    </div>
                     <div class="price">$2,500.00</div>
                 </div>
+
+                <!-- CARD 3 -->
                 <div class="card" onclick="openModal('CONSULT')">
-                    <h3 style="color:var(--neon-blue)">APEX STRATEGY</h3>
-                    <p>1-on-1 Consultation. Business Reconstruction.</p>
+                    <div>
+                        <div class="card-label">EXECUTIVE CONSULTING</div>
+                        <h3>Apex Strategy</h3>
+                        <p>Complete business model reconstruction. Automation, AI integration, and high-ticket sales psychology.</p>
+                    </div>
                     <div class="price">$5,000.00</div>
                 </div>
-                <div class="card" style="border-color:var(--neon-purple);" onclick="openModal('NETWORK')">
-                    <h3 style="color:var(--neon-purple)">JOIN INNER CIRCLE</h3>
-                    <p>Weekly Asset Drops. Private Network Access.</p>
-                    <div class="price" style="color:#fff;">$97/mo</div>
+
+                <!-- CARD 4 -->
+                <div class="card" onclick="openModal('NETWORK')">
+                    <div>
+                        <div class="card-label">MEMBERSHIP</div>
+                        <h3>Inner Circle</h3>
+                        <p>Private access to our development repository, weekly asset drops, and strategic networking.</p>
+                    </div>
+                    <div class="price">$97/mo</div>
                 </div>
             </div>
+        </div>
 
-            <div style="margin-top: 80px; color:#555; font-size:0.8rem; text-align:center;">
-                &copy; 2025 NEURAL MATRIX VAULT | <a href="legal.html" style="color:#777; text-decoration:none;">LEGAL</a>
+        <!-- FOOTER -->
+        <footer class="footer">
+            <div>&copy; 2025 NEURAL MATRIX VAULT</div>
+            <div>
+                <span>CONTACT: +1 (555) 019-2834</span> <!-- REPLACE WITH YOUR REAL NUMBER -->
+                <a href="mailto:theneuralvaultai@gmail.com">EMAIL</a>
+                <a href="legal.html">LEGAL</a>
             </div>
-        </main>
+        </footer>
     </div>
 
-    <!-- PRODUCT BRIEFING MODAL -->
-    <div id="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-close" onclick="closeModal()">×</div>
-            <h2 id="modal-title" style="font-family:'Orbitron'; font-size: 2.5rem; color: #fff; margin-bottom: 10px;">TITLE</h2>
-            
-            <div class="split-view">
-                <div class="split-col">
-                    <div class="col-header">STRATEGIC VALUE</div>
-                    <p id="modal-strategy" class="strategy-text">Description goes here.</p>
-                </div>
-                <div class="split-col">
-                    <div class="col-header" style="color:var(--neon-blue)">TECHNICAL SPECS</div>
-                    <ul id="modal-tech" class="tech-list"></ul>
-                </div>
+    <!-- INNER CIRCLE PLATFORM (HIDDEN) -->
+    <div id="inner-circle-ui" style="display:none; position:relative; z-index:20;">
+        <header class="header">
+            <div class="brand">INNER CIRCLE // SECURE</div>
+            <button class="login-btn" onclick="location.reload()">LOGOUT</button>
+        </header>
+        <div class="container">
+            <h2 style="margin-bottom:30px;">Member Resources</h2>
+            <div class="feed-item">
+                <div class="feed-meta">PRIORITY UPDATE // TODAY</div>
+                <div class="feed-content">Titanium Protocol v2.1 Released. Includes new "Business Starter" templates and updated SEO schemas.</div>
+                <a href="#" class="primary-btn" style="width:auto; display:inline-block; margin-top:15px; padding:10px 20px;">DOWNLOAD UPDATE</a>
             </div>
-
-            <a href="#" id="modal-link" target="_blank" class="modal-action">INITIATE ACQUISITION</a>
+            <div class="feed-item">
+                <div class="feed-meta">MARKET ANALYSIS</div>
+                <div class="feed-content">New report on AI-driven search intent available in the repository.</div>
+            </div>
         </div>
     </div>
 
     <!-- LOGIN MODAL -->
-    <div id="login-overlay">
-        <div class="login-box">
-            <h2 style="color:#fff; font-family:'Orbitron';">MEMBER ACCESS</h2>
-            <input type="password" id="member-pass" class="cyber-input" placeholder="ENTER ACCESS KEY">
-            <button class="inner-circle-btn" style="width:100%" onclick="verifyMember()">DECRYPT & ENTER</button>
-            <p id="login-msg" style="color:var(--neon-blue); margin-top:10px; font-size:0.8rem; font-family:monospace;"></p>
-            <div style="margin-top:20px; color:#666; cursor:pointer;" onclick="document.getElementById('login-overlay').style.display='none'">CLOSE</div>
+    <div id="login-overlay" class="modal-overlay">
+        <div class="modal-box" style="max-width:400px; text-align:center;">
+            <div class="close-btn" onclick="closeAll()">×</div>
+            <h3>CLIENT ACCESS</h3>
+            <p style="color:#666; margin-bottom:20px;">Enter your secure access key.</p>
+            <input type="password" id="member-pass" class="input-field" placeholder="ACCESS KEY">
+            <button class="primary-btn" onclick="verifyMember()">AUTHENTICATE</button>
+            <p id="login-msg" style="margin-top:15px; font-size:0.8rem; color:#ff4444;"></p>
         </div>
     </div>
 
-    <div id="hack-modal">
-        <div class="login-box" style="border-color:#0f0; box-shadow:0 0 50px rgba(0,255,0,0.1);">
-            <h2 style="color:#0f0; font-family:'Orbitron';">SYSTEM INTEGRITY</h2>
-            <p style="color:#0f0; font-family:monospace; margin:20px 0; text-align:left;">
-                > ENCRYPTION: SHA-256 (CLIENT-SIDE)<br>> STATUS: IMPENETRABLE
-            </p>
-            <p style="color:#ccc; font-size:0.9rem;">We don't use servers. We use math. If you can crack our Admin Console (`console_x1.html`), the Titanium Source Code is yours for free.</p>
-            <button class="inner-circle-btn" style="width:100%; border-color:#0f0; color:#0f0; box-shadow:none;" onclick="document.getElementById('hack-modal').style.display='none'">ACKNOWLEDGE</button>
-        </div>
-    </div>
-
-    <!-- INNER CIRCLE UI -->
-    <div id="inner-circle-ui">
-        <header class="hud-header">
-            <div class="brand" style="color:var(--neon-purple)">INNER<span style="color:#fff">CIRCLE</span></div>
-            <button class="inner-circle-btn" onclick="location.reload()">LOGOUT</button>
-        </header>
-        <div class="feed-container">
-            <h1 style="color:var(--neon-purple); font-family:'Orbitron'; margin-bottom:40px;">// SECURE FEED</h1>
-            <div class="feed-item">
-                <div class="feed-user">MAGNUS OPUS</div>
-                <div class="feed-msg">New 'Glass-Morphism' shader pack uploaded.</div>
-                <button class="inner-circle-btn" style="margin-top:10px; font-size:0.7rem;">DOWNLOAD ASSET_PACK_V4.ZIP</button>
+    <!-- PRODUCT MODAL -->
+    <div id="product-overlay" class="modal-overlay">
+        <div class="modal-box">
+            <div class="close-btn" onclick="closeAll()">×</div>
+            <div class="card-label" id="modal-label">CATEGORY</div>
+            <h2 id="modal-title" style="margin-bottom:20px;">TITLE</h2>
+            <p id="modal-desc" style="line-height:1.8; color:#ccc; margin-bottom:40px;"></p>
+            
+            <div style="border-top:1px solid var(--border-color); padding-top:20px;">
+                <div class="card-label">TECHNICAL SPECIFICATIONS</div>
+                <ul id="modal-tech" style="list-style:none; color:var(--text-secondary); line-height:2;"></ul>
             </div>
+
+            <a href="#" id="modal-link" class="primary-btn" target="_blank">INITIATE ACQUISITION</a>
         </div>
     </div>
 
     <script type="module" src="./src/app.js"></script>
     <script>
+        // --- DATA ---
         const PRODUCTS = {
-            'KIT': {
-                title: 'TITANIUM PROTOCOL',
-                strategy: "You are not buying code; you are buying time. This is the exact engine running this website. It is pre-optimized, SEO-hardened, and ready to deploy. Stop building from scratch.",
-                tech: ["Three.js WebGL Renderer", "GLSL Custom Shaders", "Mobile-First Responsive", "No External Frameworks"],
-                link: 'https://buy.stripe.com/cNiaEX0KQ2Amcyz1aP8g008'
-            },
-            'SEO': {
-                title: 'SEO DOMINANCE',
-                strategy: "Google is a robot. We speak its language. We don't write 'blogs'; we inject raw data structures (JSON-LD) that force search engines to index you as an authority.",
-                tech: ["Schema.org Implementation", "Canonical URL Strategy", "Lighthouse Score > 95", "Meta-Tag Injection"],
-                link: 'https://buy.stripe.com/14A9AT2SYgrcaqr06L8g009'
-            },
-            'CONSULT': {
-                title: 'APEX STRATEGY',
-                strategy: "A 1-on-1 architecture session. We tear down your current business model and rebuild it using automation, AI, and high-ticket psychology.",
-                tech: ["3-Hour Deep Dive", "Tech Stack Audit", "Automation Blueprint", "30-Day Support"],
-                link: 'https://buy.stripe.com/3cI6oH1OUcaWcyz2eT8g00a'
-            },
-            'NETWORK': {
-                title: 'INNER CIRCLE',
-                strategy: "Your network is your net worth. Join the private channel where we drop new code, new assets, and new strategies every week.",
-                tech: ["Discord Private Access", "Weekly Code Drops", "Live Reviews", "Beta Features"],
-                link: 'https://buy.stripe.com/6oU3cv5165My7ef6v98g00b'
-            }
+            'KIT': { title: 'Titanium Protocol', label: 'SOURCE CODE', desc: "This is the complete architectural blueprint of the Neural Matrix engine. It includes the optimized WebGL rendering core, the responsive UI framework, and the mobile-first interaction logic. Ideal for agencies and developers building high-performance digital assets.", tech: ["Vanilla ES6 Modules", "Three.js Integration", "GLSL Shaders", "Zero Dependencies"], link: 'https://buy.stripe.com/cNiaEX0KQ2Amcyz1aP8g008' },
+            'SEO': { title: 'Algorithmic SEO', label: 'SERVICE', desc: "We implement a mathematical approach to search visibility. By restructuring your site's data into JSON-LD schemas, we speak directly to search engine crawlers, forcing indexing and authority establishment.", tech: ["Schema.org/Organization", "Semantic HTML5", "Edge-Caching", "Lighthouse Optimization"], link: 'https://buy.stripe.com/14A9AT2SYgrcaqr06L8g009' },
+            'CONSULT': { title: 'Apex Strategy', label: 'CONSULTING', desc: "A comprehensive audit and reconstruction of your digital business model. We identify bottlenecks, automate workflows, and implement high-ticket sales psychology into your user experience.", tech: ["Workflow Automation", "Tech Stack Audit", "Conversion Rate Optimization", "AI Integration"], link: 'https://buy.stripe.com/3cI6oH1OUcaWcyz2eT8g00a' },
+            'NETWORK': { title: 'Inner Circle', label: 'MEMBERSHIP', desc: "Exclusive access to our private development network. Receive weekly code drops, proprietary assets, and direct market analysis before the public.", tech: ["Private Repository", "Weekly Assets", "Live Workshops", "Beta Access"], link: 'https://buy.stripe.com/6oU3cv5165My7ef6v98g00b' }
         };
 
+        // --- UI FUNCTIONS ---
         function openModal(key) {
-            const item = PRODUCTS[key];
-            document.getElementById('modal-title').innerText = item.title;
-            document.getElementById('modal-strategy').innerText = item.strategy;
+            const p = PRODUCTS[key];
+            document.getElementById('modal-title').innerText = p.title;
+            document.getElementById('modal-label').innerText = p.label;
+            document.getElementById('modal-desc').innerText = p.desc;
             const list = document.getElementById('modal-tech');
             list.innerHTML = '';
-            item.tech.forEach(t => { const li = document.createElement('li'); li.innerText = t; list.appendChild(li); });
-            document.getElementById('modal-link').href = item.link;
-            const modal = document.getElementById('modal-overlay');
-            modal.style.display = 'flex';
-            setTimeout(() => modal.style.opacity = '1', 10);
+            p.tech.forEach(t => { const li = document.createElement('li'); li.innerText = "+ " + t; list.appendChild(li); });
+            document.getElementById('modal-link').href = p.link;
+            document.getElementById('product-overlay').style.display = 'flex';
         }
 
-        function closeModal() {
-            const modal = document.getElementById('modal-overlay');
-            modal.style.opacity = '0';
-            setTimeout(() => modal.style.display = 'none', 300);
+        function closeAll() {
+            document.querySelectorAll('.modal-overlay').forEach(el => el.style.display = 'none');
         }
 
         function openLogin() { document.getElementById('login-overlay').style.display = 'flex'; }
 
-        // --- ENCRYPTED KEY VERIFICATION ---
-        // HASHLIST: 
-        // NMV-ALPHA = "3879288a7c2656972236b2f6772740922659779352737603626260a927063238"
-        // NMV-BETA  = "a401c226e6329065a63972205560965762696655523030302302302302302302"
-        // NMV-OMEGA = "c656360330366633633633633633633633633633633633633633633633633633" (Placeholder logic)
-        
-        // FOR NOW, WE VERIFY THE HASH OF "NMV-ALPHA"
+        // --- SECURITY ---
+        // HASH for 'NMV-ALPHA': 3879288a7c2656972236b2f6772740922659779352737603626260a927063238
         const VALID_HASHES = [
-            "3879288a7c2656972236b2f6772740922659779352737603626260a927063238" // NMV-ALPHA
+            "3879288a7c2656972236b2f6772740922659779352737603626260a927063238" 
         ];
 
         async function verifyMember() {
-            const msg = document.getElementById('login-msg');
-            msg.innerText = "CALCULATING HASH...";
+            const input = document.getElementById('member-pass').value.trim().toUpperCase();
             
-            const raw = document.getElementById('member-pass').value.trim().toUpperCase(); // Forces upper case
-            const buffer = new TextEncoder().encode(raw);
+            // Generate Hash
+            const buffer = new TextEncoder().encode(input);
             const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
             const hashArray = Array.from(new Uint8Array(hashBuffer));
             const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
-            // CHECK IF HASH EXISTS IN LEDGER
+            console.log("Input:", input); // DEBUG: Check console if it fails
+            console.log("Hash:", hashHex);
+
             if (VALID_HASHES.includes(hashHex)) {
-                document.getElementById('login-overlay').style.display = 'none';
-                document.getElementById('ui-layer').style.display = 'none';
+                closeAll();
+                document.getElementById('main-view').style.display = 'none';
                 document.getElementById('inner-circle-ui').style.display = 'block';
             } else {
-                msg.innerText = "INVALID ACCESS KEY";
-                msg.style.color = "red";
+                document.getElementById('login-msg').innerText = "INVALID ACCESS KEY";
             }
         }
     </script>
 </body>
-                        </html>
+</html>
