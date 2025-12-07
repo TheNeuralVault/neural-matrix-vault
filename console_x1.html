@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TERMINAL | DIAGNOSTIC</title>
+    <title>TERMINAL | COMMAND</title>
+    <!-- JSZip for Bundling Source Code -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    
     <style>
         body { background: #000; color: #0f0; font-family: 'Courier New', monospace; padding: 20px; }
         h1, h2 { border-bottom: 1px solid #0f0; padding-bottom: 10px; }
         input, textarea { width: 100%; background: #111; border: 1px solid #0f0; color: #fff; padding: 10px; margin-bottom: 10px; }
-        button { background: #0f0; color: #000; padding: 10px 20px; border: none; font-weight: bold; cursor: pointer; }
+        button { background: #0f0; color: #000; padding: 10px 20px; border: none; font-weight: bold; cursor: pointer; margin-right: 10px; margin-bottom: 10px; }
         .panel { display: none; margin-top: 20px; border: 1px solid #333; padding: 20px; }
-        #debug-console { margin-top: 20px; color: yellow; font-size: 10px; border: 1px dashed yellow; padding: 10px; word-break: break-all; display: none; }
+        .status-log { color: yellow; font-size: 12px; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -18,32 +22,46 @@
     <div id="auth-gate">
         <h1 style="color:red">:: QUANTUM ENCRYPTION WALL ::</h1>
         <p>IDENTIFY YOURSELF.</p>
-        <input type="text" id="admin-pass" placeholder="ENTER ACCESS KEY">
+        <input type="password" id="admin-pass" placeholder="ENTER ACCESS KEY">
         <button onclick="verifyIdentity()">INITIATE HANDSHAKE</button>
-        
-        <!-- DIAGNOSTIC OUTPUT -->
-        <div id="debug-console"></div>
+        <p id="auth-status"></p>
     </div>
 
     <div id="admin-interface" style="display:none;">
-        <h1>:: ACCESS GRANTED ::</h1>
+        <h1>:: COMMAND CONSOLE ::</h1>
         <button onclick="show('seo')">SEO ENGINE</button>
-        <button onclick="show('delivery')">DELIVERY</button>
+        <button onclick="show('delivery')">TITANIUM DELIVERY</button>
+        <button onclick="show('circle')">INNER CIRCLE OPS</button>
+
+        <!-- SEO TOOL -->
         <div id="p-seo" class="panel">
             <h2>SEO GENERATOR</h2>
-            <input id="d" placeholder="Domain"><input id="n" placeholder="Name"><input id="de" placeholder="Desc">
-            <button onclick="genSEO()">EXECUTE</button>
-            <textarea id="out" style="height:100px; margin-top:10px;"></textarea>
+            <input id="d" placeholder="Domain (e.g. client.com)">
+            <input id="n" placeholder="Business Name">
+            <input id="de" placeholder="Description">
+            <button onclick="genSEO()">GENERATE CODE</button>
+            <textarea id="out" style="height:100px;"></textarea>
         </div>
+
+        <!-- DELIVERY TOOL -->
         <div id="p-delivery" class="panel">
-            <h2>TITANIUM DELIVERY</h2>
-            <button onclick="dlSource()">DOWNLOAD SOURCE</button>
+            <h2>TITANIUM SOURCE COMPILER</h2>
+            <p>Compiles index.html, style.css, app.js, and manifest into a ZIP file.</p>
+            <button onclick="compileAndDownload()">GENERATE .ZIP PACKAGE</button>
+            <div id="zip-log" class="status-log"></div>
+        </div>
+
+        <!-- INNER CIRCLE OPS -->
+        <div id="p-circle" class="panel">
+            <h2>MEMBER MANAGEMENT</h2>
+            <p>Member Password: <strong>NEURAL_MEMBER</strong></p>
+            <textarea placeholder="Post Update to Inner Circle Feed..."></textarea>
+            <button>POST UPDATE (Simulated)</button>
         </div>
     </div>
 
     <script>
-        // TARGET: NEURAL_PRIME
-        const TARGET_HASH = "fb57b29c20faf81d86757bda0839b5da8c0b76952a11edc6d1c9c6abebf5f9de";
+        const TARGET_HASH = "fb57b29c20faf81d86757bda0839b5da8c0b76952a11edc6d1c9c6abebf5f9de"; // NEURAL_PRIME
 
         async function sha256(m) {
             const b = new TextEncoder().encode(m);
@@ -52,38 +70,60 @@
         }
 
         async function verifyIdentity() {
-            const rawInput = document.getElementById('admin-pass').value;
-            const cleanInput = rawInput.trim(); // Remove spaces
-            const hash = await sha256(cleanInput);
-            
-            // SHOW THE DATA
-            const debug = document.getElementById('debug-console');
-            debug.style.display = 'block';
-            debug.innerHTML = `
-                [DIAGNOSTIC REPORT]<br>
-                INPUT RECEIVED: "${cleanInput}"<br>
-                HASH GENERATED: ${hash}<br>
-                HASH EXPECTED : ${TARGET_HASH}<br>
-                MATCH STATUS  : ${hash === TARGET_HASH ? "TRUE" : "FALSE"}
-            `;
-
-            if (hash === TARGET_HASH) {
-                setTimeout(() => {
-                    document.getElementById('auth-gate').style.display = 'none';
-                    document.getElementById('admin-interface').style.display = 'block';
-                }, 1000);
+            const i = document.getElementById('admin-pass').value.trim();
+            if (await sha256(i) === TARGET_HASH) {
+                document.getElementById('auth-gate').style.display = 'none';
+                document.getElementById('admin-interface').style.display = 'block';
+            } else { 
+                document.getElementById('auth-status').innerText = "ACCESS DENIED."; 
             }
         }
 
         function show(id) { document.querySelectorAll('.panel').forEach(p=>p.style.display='none'); document.getElementById('p-'+id).style.display='block'; }
+
         function genSEO() {
             const d=document.getElementById('d').value, n=document.getElementById('n').value, de=document.getElementById('de').value;
-            document.getElementById('out').value = `<title>${n}</title><meta name="description" content="${de}">`;
+            document.getElementById('out').value = `<title>${n}</title><meta name="description" content="${de}">\n<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"${n}","url":"https://${d}"}<\/script>`;
         }
-        function dlSource() {
-            fetch('index.html').then(r=>r.text()).then(t=>{
-                const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([t],{type:'text/html'})); a.download='titanium_core.html'; a.click();
-            });
+
+        // --- TITANIUM COMPILER ---
+        async function compileAndDownload() {
+            const log = document.getElementById('zip-log');
+            log.innerText = "INITIALIZING COMPILER...";
+            
+            const zip = new JSZip();
+            
+            try {
+                log.innerText = "FETCHING INDEX...";
+                const index = await fetch('index.html').then(r => r.text());
+                zip.file("index.html", index);
+
+                log.innerText = "FETCHING STYLE...";
+                const style = await fetch('style.css').then(r => r.text());
+                zip.file("style.css", style);
+
+                log.innerText = "FETCHING BRAIN...";
+                const app = await fetch('src/app.js').then(r => r.text());
+                zip.folder("src").file("app.js", app);
+
+                log.innerText = "FETCHING MANIFEST...";
+                const man = await fetch('manifest.json').then(r => r.text());
+                zip.file("manifest.json", man);
+
+                log.innerText = "FETCHING LEGAL...";
+                const leg = await fetch('legal.html').then(r => r.text());
+                zip.file("legal.html", leg);
+
+                log.innerText = "COMPRESSING...";
+                zip.generateAsync({type:"blob"}).then(function(content) {
+                    saveAs(content, "Titanium_Protocol_Source.zip");
+                    log.innerText = "DOWNLOAD COMPLETE.";
+                });
+
+            } catch (err) {
+                log.innerText = "ERROR: " + err.message;
+                console.error(err);
+            }
         }
     </script>
 </body>
