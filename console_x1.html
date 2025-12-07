@@ -13,7 +13,6 @@
     </style>
 </head>
 <body>
-
     <div id="auth-gate">
         <h1 style="color:red">:: QUANTUM ENCRYPTION WALL ::</h1>
         <p>IDENTIFY YOURSELF.</p>
@@ -21,86 +20,43 @@
         <button onclick="verifyIdentity()">INITIATE HANDSHAKE</button>
         <p id="status" style="margin-top:10px;"></p>
     </div>
-
     <div id="admin-interface" style="display:none;">
         <h1>:: ACCESS GRANTED ::</h1>
-        <div style="margin-bottom:20px;">
-            <button onclick="show('seo')">SEO ENGINE</button>
-            <button onclick="show('delivery')">DELIVERY</button>
-            <button onclick="show('circle')">CIRCLE OPS</button>
-        </div>
-
+        <button onclick="show('seo')">SEO ENGINE</button>
+        <button onclick="show('delivery')">DELIVERY</button>
         <div id="p-seo" class="panel">
             <h2>SEO GENERATOR</h2>
             <input id="d" placeholder="Domain"><input id="n" placeholder="Name"><input id="de" placeholder="Desc">
             <button onclick="genSEO()">EXECUTE</button>
             <textarea id="out" style="height:100px; margin-top:10px;"></textarea>
         </div>
-
         <div id="p-delivery" class="panel">
             <h2>TITANIUM DELIVERY</h2>
             <button onclick="dlSource()">DOWNLOAD SOURCE</button>
         </div>
-
-        <div id="p-circle" class="panel">
-            <h2>INNER CIRCLE</h2>
-            <p>Discord: discord.gg/neural-private-x7z</p>
-        </div>
     </div>
-
     <script>
-        // THE HASH OF 'NEURAL_PRIME'
-        // We do not store the password. We store the result.
-        // SHA-256('NEURAL_PRIME') = 
         const TARGET_HASH = "8f360c77607a976868511f592476579895c2573752668516d29622352296d3f2";
-
-        async function sha256(message) {
-            const msgBuffer = new TextEncoder().encode(message);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        async function sha256(m) {
+            const b = new TextEncoder().encode(m);
+            const h = await crypto.subtle.digest('SHA-256', b);
+            return Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2,'0')).join('');
         }
-
         async function verifyIdentity() {
-            const input = document.getElementById('admin-pass').value;
-            const status = document.getElementById('status');
-            status.innerText = "CALCULATING HASH...";
-            status.style.color = "yellow";
-
-            const hash = await sha256(input);
-            
-            if (hash === TARGET_HASH) {
-                status.innerText = "IDENTITY CONFIRMED.";
-                status.style.color = "#0f0";
-                setTimeout(() => {
-                    document.getElementById('auth-gate').style.display = 'none';
-                    document.getElementById('admin-interface').style.display = 'block';
-                }, 500);
-            } else {
-                status.innerText = "ACCESS DENIED. IP LOGGED.";
-                status.style.color = "red";
-                document.getElementById('admin-pass').value = '';
-            }
+            const i = document.getElementById('admin-pass').value;
+            if (await sha256(i) === TARGET_HASH) {
+                document.getElementById('auth-gate').style.display = 'none';
+                document.getElementById('admin-interface').style.display = 'block';
+            } else { document.getElementById('status').innerText = "ACCESS DENIED."; }
         }
-
-        function show(id) {
-            document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
-            document.getElementById('p-' + id).style.display = 'block';
-        }
-
+        function show(id) { document.querySelectorAll('.panel').forEach(p=>p.style.display='none'); document.getElementById('p-'+id).style.display='block'; }
         function genSEO() {
-            const d = document.getElementById('d').value;
-            const n = document.getElementById('n').value;
-            const de = document.getElementById('de').value;
+            const d=document.getElementById('d').value, n=document.getElementById('n').value, de=document.getElementById('de').value;
             document.getElementById('out').value = `<title>${n}</title><meta name="description" content="${de}">`;
         }
-
         function dlSource() {
-            fetch('index.html').then(r => r.text()).then(t => {
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(new Blob([t], {type:'text/html'}));
-                a.download = 'titanium_core.html';
-                a.click();
+            fetch('index.html').then(r=>r.text()).then(t=>{
+                const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([t],{type:'text/html'})); a.download='titanium_core.html'; a.click();
             });
         }
     </script>
