@@ -36,8 +36,7 @@
         </div>
     </div>
     <script>
-        const TARGET_HASH = "8f360c77607a976868511f592476579895c2573752668516d29622352296d3f2";
-        async function sha256(m) {
+        const TARGET_HASH = "fb57b29c20faf81d86757bda0839b5da8c0b76952a11edc6d1c9c6abebf5f9de";{
             const b = new TextEncoder().encode(m);
             const h = await crypto.subtle.digest('SHA-256', b);
             return Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2,'0')).join('');
